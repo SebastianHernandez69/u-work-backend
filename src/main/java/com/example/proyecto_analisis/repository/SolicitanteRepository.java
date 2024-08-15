@@ -1,6 +1,7 @@
 package com.example.proyecto_analisis.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -64,4 +65,7 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
         @Param("idCondicionP") int idCondicionP,
         @Param("idPersona") int idPersona
     );
+
+    @Query(value = "CALL obtenerAplicacionesSolicitante(:idSolicitanteP)", nativeQuery = true)
+    public List<Object[]> obtenerAplicacionesSolicitante(@Param("idSolicitanteP") int idSolicitanteP);
 }

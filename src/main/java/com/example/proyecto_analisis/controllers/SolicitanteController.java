@@ -1,8 +1,10 @@
 package com.example.proyecto_analisis.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,7 +77,17 @@ public class SolicitanteController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al actualizar: " + e.toString());
         }
+    }
 
+    @GetMapping("/solicitante/solicitudes/{idSolicitante}")
+    public ResponseEntity<Object> obtenerAplicacionesSolicitante(@PathVariable int idSolicitante){
 
+        try {
+            List<Map<String,Object>> solicitudes = solicitanteImpl.obtenerAplicacionesSolicitante(idSolicitante);
+
+            return ResponseEntity.ok(solicitudes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener solicitudes del usuario: " + e.getMessage());
+        }
     }
 }

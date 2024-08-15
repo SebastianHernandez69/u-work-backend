@@ -1,7 +1,12 @@
 package com.example.proyecto_analisis.services;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,5 +117,31 @@ public class SolicitanteService {
         int idPersona
     ){
         solicitanteRepositorio.ingresarHistorialMedico(descripcion, idCondicion, idPersona);
+    }
+
+    // Obtener solicitudes del solicitante
+    public List<Map<String,Object>> obtenerAplicacionesSolicitante(int idSolicitanteP){
+
+        List<Object[]> objSolicitudes = solicitanteRepositorio.obtenerAplicacionesSolicitante(idSolicitanteP);
+
+        if (objSolicitudes.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            List<Map<String,Object>> solicitudes = objSolicitudes.stream()
+                .map(obj -> {
+                    Map<String,Object> map = new LinkedHashMap<>();
+                    map.put("idOferta", obj[0]);
+                    map.put("fechaPublicacionOferta", obj[1]);
+                    map.put("tituloOferta", obj[2]);
+                    map.put("nombreEmpresa", obj[3]);
+                    map.put("fechaSolicitud", obj[4]);
+                    map.put("estadoSolicitud", obj[5]);
+                    map.put("url_logo", obj[6]);
+
+                    return map;
+                }).collect(Collectors.toList());
+
+            return solicitudes;
+        }
     }
 }
