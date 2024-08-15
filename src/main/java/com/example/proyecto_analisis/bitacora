@@ -13,24 +13,125 @@ Pendientes:
 
 
 
-TEMP:
+PROCEDIMIENTO ALMACENADO
+
 DELIMITER $$
-CREATE PROCEDURE insertarHistorialAcademico(IN idPersonaP int, in idNivelAcademicoP int, 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarPreferenciaSolicitante`(IN `id_solicitante` INT)
+BEGIN 
+
+    DELETE FROM preferencias_puestos
+    WHERE ID_PERSONA = id_solicitante;
+    
+    DELETE FROM preferencias_modalidades
+    WHERE ID_PERSONA = id_solicitante;
+    
+    DELETE FROM preferencias_contratos
+    WHERE ID_PERSONA = id_solicitante;
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarPreferenciasUser`(IN `id_persona` INT)
+BEGIN 
+
+    DELETE FROM preferencias_puestos
+    WHERE ID_PERSONA = id_persona;
+    
+    DELETE FROM preferencias_modalidades
+    WHERE ID_PERSONA = id_persona;
+    
+    DELETE FROM preferencias_contratos
+    WHERE ID_PERSONA = id_persona;
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarFamiliarSolicitante`(
+	in idFamiliarP int,
+    in idParentescoP int,
+    in idSolicitante int
+)
+BEGIN
+	INSERT INTO `familiares`(`ID_FAMILIAR`, `ID_PARENTESCOS`, `ID_SOLICITANTE`) VALUES (idFamiliarP, idParentescoP, idSolicitante);
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarHistorialMedico`(
+	in descripcionP varchar(300),
+    in idCondicionP int,
+    in idPersona int
+)
+BEGIN
+	INSERT INTO `historial_medico`(`DESCRIPCION`, `ID_CONDICION_MEDICA`, `ID_PERSONA`) VALUES (descripcionP, idCondicionP, idPersona);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarPreferenciaContrato`(IN ID_PERSONA_P INT, IN ID_CONTRATO_P INT)
+BEGIN
+	INSERT INTO preferencias_contratos(ID_PERSONA,ID_CONTRATO) VALUES (ID_PERSONA_P, ID_CONTRATO_P);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarPreferenciaModalidad`(IN `ID_MODALIDAD_P` INT, IN `ID_PERSONA_P` INT)
+BEGIN
+	INSERT INTO preferencias_modalidades(ID_MODALIDAD, ID_PERSONA) VALUES (ID_MODALIDAD_P, ID_PERSONA_P);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarPreferenciaPuesto`(IN `ID_PUESTO_P` INT, IN `ID_PERSONA_P` INT)
+BEGIN
+	INSERT INTO preferencias_puestos(ID_PUESTO, ID_PERSONA) VALUES (ID_PUESTO_P, ID_PERSONA_P);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarSolicitanteIdioma`(
+	in idPersonaP int,
+    in idIdiomaP int,
+    in idNivelP int
+)
+BEGIN
+	INSERT INTO `solicitantes_idiomas`(`ID_SOLICITANTE`, `ID_IDIOMA`, `ID_NIVEL_IDIOMA`) VALUES (idPersonaP, idIdiomaP, idNivelP);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarHistorialAcademico`(IN idPersonaP int, in idNivelAcademicoP int, 
                                             in idFormacionAcP int, in tituloP varchar(100), in fechaEgresoP date, 
                                             in INSTITUCIONP varchar(100))
 BEGIN
 	INSERT INTO `historial_academico`(`ID_PERSONA`, `ID_NIVEL_ACADEMICO`,`ID_FORMACION_PROFESIONAL`, `TITULO`, `FECHA_EGRESO`, `INSTITUCION`) 
     VALUES (idPersonaP, idNivelAcademicoP, idFormacionAcP, tituloP, fechaEgresoP, INSTITUCIONP);
     
-END $$
-
+END$$
 DELIMITER ;
 
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarSeguroSolicitante`(
+	in idPersonaP int,
+    in idTipoSeguroP int,
+    in fechaAfiliacionP date,
+    in fechaExpiracionP date,
+    in numeroAfiliacionP varchar(30)
+)
+BEGIN
+INSERT INTO `seguros_solicitantes`(`ID_PERSONA`, `ID_TIPO_SEGURO`, `FECHA_AFILIACION`, `FECHA_EXPIRACION`, `NUMERO_AFILIACION`) VALUES (idPersonaP, idTipoSeguroP, fechaAfiliacionP, fechaExpiracionP, numeroAfiliacionP);
 
-{
-    "tipoSeguro": 1,
-    "fechaAfiliacion": "2023-01-05",
-    "fechaExpiracion": "2025-01-01",
-    "numeroAfiliacion": "AF978654231"
-}
+END$$
+DELIMITER ;
