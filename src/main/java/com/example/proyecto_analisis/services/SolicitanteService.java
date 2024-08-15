@@ -1,7 +1,12 @@
 package com.example.proyecto_analisis.services;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,11 +81,99 @@ public class SolicitanteService {
         solicitanteRepositorio.insertarHistorialAcademico(idPersonaP, idNivelAcademicoP, idFormacionAcP, tituloP, fechaEgresoP, INSTITUCIONP);
     }
 
+    //Agg idiomas del solicitante
     public void ingresarSolicitanteIdioma(
         int idPersonaP,
         int idIdiomaP,
         int idNivelP
     ){
         solicitanteRepositorio.ingresarSolicitanteIdioma(idPersonaP, idIdiomaP, idNivelP);
+    }
+
+    //Agg informacion de seguro del solicitante
+    public void insertarSeguroSolicitante(
+        int idPersonaP,
+        int idTipoSeguroP,
+        Date fechaAfiliacionP,
+        Date fechaExpiracionP,
+        String numeroAfiliacionP
+    ){
+        solicitanteRepositorio.insertarSeguroSolicitante(idPersonaP,idTipoSeguroP,fechaAfiliacionP,fechaExpiracionP,numeroAfiliacionP);
+    }
+
+    // Agg familiar de solicitante
+    public void ingresarFamiliarSolicitante(
+        int idFamiliar, 
+        int idParentesco, 
+        int idSolicitante
+    ){
+        solicitanteRepositorio.ingresarFamiliarSolicitante(idFamiliar, idParentesco, idSolicitante);
+    }
+
+    // Agg historial medico solicitante
+    public void ingresarHistorialMedico(
+        String descripcion, 
+        int idCondicion, 
+        int idPersona
+    ){
+        solicitanteRepositorio.ingresarHistorialMedico(descripcion, idCondicion, idPersona);
+    }
+
+    // Obtener solicitudes del solicitante
+    public List<Map<String,Object>> obtenerAplicacionesSolicitante(int idSolicitanteP){
+
+        List<Object[]> objSolicitudes = solicitanteRepositorio.obtenerAplicacionesSolicitante(idSolicitanteP);
+
+        if (objSolicitudes.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            List<Map<String,Object>> solicitudes = objSolicitudes.stream()
+                .map(obj -> {
+                    Map<String,Object> map = new LinkedHashMap<>();
+                    map.put("idOferta", obj[0]);
+                    map.put("fechaPublicacionOferta", obj[1]);
+                    map.put("tituloOferta", obj[2]);
+                    map.put("nombreEmpresa", obj[3]);
+                    map.put("fechaSolicitud", obj[4]);
+                    map.put("estadoSolicitud", obj[5]);
+                    map.put("url_logo", obj[6]);
+
+                    return map;
+                }).collect(Collectors.toList());
+
+            return solicitudes;
+        }
+    }
+
+    // Obtener detalle notificacion
+    public Map<String,Object> obtenerDetalleNotificacionSolic(int idNotifSolicitanteP){
+
+        List<Object[]> objNotificacion = solicitanteRepositorio.obtenerDetalleNotificacionSolic(idNotifSolicitanteP);
+
+        if(objNotificacion.isEmpty()){
+            return Collections.emptyMap();
+        }else{
+            List<Map<String,Object>> notificaciones = objNotificacion.stream()
+                .map(obj -> {
+                    Map<String,Object> map = new LinkedHashMap<>();
+                    map.put("idNotificacion", obj[0]);
+                    map.put("titulo", obj[1]);
+                    map.put("logoEmpresa", obj[2]);
+                    map.put("nombreEmpresa", obj[3]);
+                    map.put("descripcion", obj[4]);
+                    map.put("fecha", obj[5]);
+                    map.put("idSolicitud", obj[6]);
+
+                    return map;
+                }).collect(Collectors.toList());
+
+            return notificaciones.get(0);
+        }
+        
+    }
+
+    // Cambiar estado de notificacion solicitante
+    public void cambiarEstadoNotiSolic(int idNotifSolicitanteP){
+        solicitanteRepositorio.cambiarEstadoNotiSolic(idNotifSolicitanteP);
     }
 }
