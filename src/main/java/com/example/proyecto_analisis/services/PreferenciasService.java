@@ -68,4 +68,20 @@ public class PreferenciasService {
 
     }
 
+    @Transactional
+    public void ingresarPreferenciaPuesto(int idPuestoP, int idPersonaP){
+        puestoRepositorio.ingresarPreferenciaPuesto(idPuestoP, idPersonaP);
+    }
+
+    @Transactional
+    public void ingresarPreferenciaModalidad(int idModalidadP, int idPersonaP){
+        puestoRepositorio.ingresarPreferenciaModalidad(idModalidadP, idPersonaP);
+    }
+
+    @Transactional
+    public void ingresarPreferenciaContrato(int idPersonaP, int idContratoP){
+        puestoRepositorio.ingresarPreferenciaContrato(idPersonaP, idContratoP);
+    }
+
+    
 }

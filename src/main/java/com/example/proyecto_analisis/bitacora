@@ -1,0 +1,158 @@
+cambios en la base de dato:
+1. Agregar autoincrement a idExperienciaLaboral en tablaexperiencia_laboral
+2. Cambiar nombre de PK en tabla experiencia laboral de "idExperiencia laboral" a "idExperiencia_laboral"
+
+
+Pendientes:
+1. Agg validacion para que la empresa, idPersona, idPuesto en conjunto no se puedan repetir en tbl idExperiencia_laboral
+
+
+
+
+
+
+
+
+PROCEDIMIENTO ALMACENADO
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarPreferenciaSolicitante`(IN `id_solicitante` INT)
+BEGIN 
+
+    DELETE FROM preferencias_puestos
+    WHERE ID_PERSONA = id_solicitante;
+    
+    DELETE FROM preferencias_modalidades
+    WHERE ID_PERSONA = id_solicitante;
+    
+    DELETE FROM preferencias_contratos
+    WHERE ID_PERSONA = id_solicitante;
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarPreferenciasUser`(IN `id_persona` INT)
+BEGIN 
+
+    DELETE FROM preferencias_puestos
+    WHERE ID_PERSONA = id_persona;
+    
+    DELETE FROM preferencias_modalidades
+    WHERE ID_PERSONA = id_persona;
+    
+    DELETE FROM preferencias_contratos
+    WHERE ID_PERSONA = id_persona;
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarFamiliarSolicitante`(
+	in idFamiliarP int,
+    in idParentescoP int,
+    in idSolicitante int
+)
+BEGIN
+	INSERT INTO `familiares`(`ID_FAMILIAR`, `ID_PARENTESCOS`, `ID_SOLICITANTE`) VALUES (idFamiliarP, idParentescoP, idSolicitante);
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarHistorialMedico`(
+	in descripcionP varchar(300),
+    in idCondicionP int,
+    in idPersona int
+)
+BEGIN
+	INSERT INTO `historial_medico`(`DESCRIPCION`, `ID_CONDICION_MEDICA`, `ID_PERSONA`) VALUES (descripcionP, idCondicionP, idPersona);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarPreferenciaContrato`(IN ID_PERSONA_P INT, IN ID_CONTRATO_P INT)
+BEGIN
+	INSERT INTO preferencias_contratos(ID_PERSONA,ID_CONTRATO) VALUES (ID_PERSONA_P, ID_CONTRATO_P);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarPreferenciaModalidad`(IN `ID_MODALIDAD_P` INT, IN `ID_PERSONA_P` INT)
+BEGIN
+	INSERT INTO preferencias_modalidades(ID_MODALIDAD, ID_PERSONA) VALUES (ID_MODALIDAD_P, ID_PERSONA_P);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarPreferenciaPuesto`(IN `ID_PUESTO_P` INT, IN `ID_PERSONA_P` INT)
+BEGIN
+	INSERT INTO preferencias_puestos(ID_PUESTO, ID_PERSONA) VALUES (ID_PUESTO_P, ID_PERSONA_P);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ingresarSolicitanteIdioma`(
+	in idPersonaP int,
+    in idIdiomaP int,
+    in idNivelP int
+)
+BEGIN
+	INSERT INTO `solicitantes_idiomas`(`ID_SOLICITANTE`, `ID_IDIOMA`, `ID_NIVEL_IDIOMA`) VALUES (idPersonaP, idIdiomaP, idNivelP);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarHistorialAcademico`(IN idPersonaP int, in idNivelAcademicoP int, 
+                                            in idFormacionAcP int, in tituloP varchar(100), in fechaEgresoP date, 
+                                            in INSTITUCIONP varchar(100))
+BEGIN
+	INSERT INTO `historial_academico`(`ID_PERSONA`, `ID_NIVEL_ACADEMICO`,`ID_FORMACION_PROFESIONAL`, `TITULO`, `FECHA_EGRESO`, `INSTITUCION`) 
+    VALUES (idPersonaP, idNivelAcademicoP, idFormacionAcP, tituloP, fechaEgresoP, INSTITUCIONP);
+    
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarSeguroSolicitante`(
+	in idPersonaP int,
+    in idTipoSeguroP int,
+    in fechaAfiliacionP date,
+    in fechaExpiracionP date,
+    in numeroAfiliacionP varchar(30)
+)
+BEGIN
+INSERT INTO `seguros_solicitantes`(`ID_PERSONA`, `ID_TIPO_SEGURO`, `FECHA_AFILIACION`, `FECHA_EXPIRACION`, `NUMERO_AFILIACION`) VALUES (idPersonaP, idTipoSeguroP, fechaAfiliacionP, fechaExpiracionP, numeroAfiliacionP);
+
+END$$
+DELIMITER ;
+
+
+//Obtener aplicaciones de solicitante
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerAplicacionesSolicitante`(IN `idSolicitanteP` INT)
+BEGIN
+	SELECT of.id_oferta,
+		DATE_FORMAT(of.fecha_publicacion, '%d %b, %Y') as fechaPublicacion,
+        of.titulo,
+        em.nombre_empresa,
+        DATE_FORMAT(s.fecha_solicitud, '%d %b, %Y') as fechaSolicitud,
+        es.estado_solicitud,
+        em.url_logo
+    FROM estado_solicitud es
+    INNER JOIN solicitudes s on es.ID_ESTADO_SOLICITUD = s.ID_ESTADO_SOLICITUD
+    INNER JOIN ofertas of on s.ID_OFERTA = of.ID_OFERTA
+    INNER JOIN empresa em on of.ID_EMPRESA = em.ID_EMPRESA
+    WHERE s.ID_SOLICITANTE = idSolicitanteP
+    ORDER BY s.FECHA_SOLICITUD ASC;
+END$$
+DELIMITER ;
