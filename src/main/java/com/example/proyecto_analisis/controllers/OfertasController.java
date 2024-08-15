@@ -1,6 +1,8 @@
 package com.example.proyecto_analisis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +19,12 @@ public class OfertasController {
     private OfertaService ofertaService;
 
     @GetMapping("/detalle/{idOferta}")
-    public OfertaDTO obtenerDetalleOferta(@PathVariable int idOferta) {
-        return ofertaService.obtenerDetalleOferta(idOferta);
+    public ResponseEntity<OfertaDTO> obtenerDetalleOferta(@PathVariable int idOferta) {
+        try {
+            return ResponseEntity.ok(ofertaService.obtenerDetalleOferta(idOferta));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
 }
