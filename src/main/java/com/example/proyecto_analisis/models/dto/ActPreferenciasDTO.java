@@ -15,7 +15,7 @@ public class ActPreferenciasDTO {
     
     private List<Integer> puestos;
 
-    private List<Integer> modalidaes;
+    private List<Integer> modalidades;
 
     private List<Integer> contratos;
 }

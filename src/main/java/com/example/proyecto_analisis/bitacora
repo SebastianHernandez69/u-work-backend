@@ -1,0 +1,27 @@
+cambios en la base de dato:
+1. Agregar autoincrement a idExperienciaLaboral en tablaexperiencia_laboral
+2. Cambiar nombre de PK en tabla experiencia laboral de "idExperiencia laboral" a "idExperiencia_laboral"
+
+
+Pendientes:
+1. Agg validacion para que la empresa, idPersona, idPuesto en conjunto no se puedan repetir en tbl idExperiencia_laboral
+
+
+
+
+
+
+
+
+TEMP:
+DELIMITER $$
+CREATE PROCEDURE insertarHistorialAcademico(IN idPersonaP int, in idNivelAcademicoP int, 
+                                            in idFormacionAcP int, in tituloP varchar(100), in fechaEgresoP date, 
+                                            in INSTITUCIONP varchar(100))
+BEGIN
+	INSERT INTO `historial_academico`(`ID_PERSONA`, `ID_NIVEL_ACADEMICO`,`ID_FORMACION_PROFESIONAL`, `TITULO`, `FECHA_EGRESO`, `INSTITUCION`) 
+    VALUES (idPersonaP, idNivelAcademicoP, idFormacionAcP, tituloP, fechaEgresoP, INSTITUCIONP);
+    
+END $$
+
+DELIMITER ;

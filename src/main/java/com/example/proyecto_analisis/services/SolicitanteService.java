@@ -1,11 +1,14 @@
 package com.example.proyecto_analisis.services;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.proyecto_analisis.models.ExperienciaLaboral;
 import com.example.proyecto_analisis.models.Solicitante;
+import com.example.proyecto_analisis.repository.ExperienciaLaboralRepository;
 import com.example.proyecto_analisis.repository.SolicitanteRepository;
 
 @Service
@@ -13,6 +16,9 @@ public class SolicitanteService {
     
     @Autowired
     private SolicitanteRepository solicitanteRepositorio;
+
+    @Autowired
+    private ExperienciaLaboralRepository expLabRepositorio;
 
     public void ingresarSolicitante(Solicitante solicitante){
         solicitanteRepositorio.save(solicitante);
@@ -54,4 +60,27 @@ public class SolicitanteService {
         }
     }
 
+    public void aggExperienciaLaboral(ExperienciaLaboral expLaboral){
+        expLabRepositorio.save(expLaboral); 
+    }
+
+    // Agg experiencia laboral
+    public void insertarHistorialAcademico(
+        int idPersonaP, 
+        int idNivelAcademicoP, 
+        int idFormacionAcP, 
+        String tituloP, 
+        Date fechaEgresoP, 
+        String INSTITUCIONP
+    ){
+        solicitanteRepositorio.insertarHistorialAcademico(idPersonaP, idNivelAcademicoP, idFormacionAcP, tituloP, fechaEgresoP, INSTITUCIONP);
+    }
+
+    public void ingresarSolicitanteIdioma(
+        int idPersonaP,
+        int idIdiomaP,
+        int idNivelP
+    ){
+        solicitanteRepositorio.ingresarSolicitanteIdioma(idPersonaP, idIdiomaP, idNivelP);
+    }
 }

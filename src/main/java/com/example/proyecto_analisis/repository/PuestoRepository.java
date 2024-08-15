@@ -47,4 +47,13 @@ public interface PuestoRepository extends JpaRepository<Puesto, Integer> {
     @Modifying
     @Query(value = "CALL ingresarPreferenciaPuesto(:idPuestoP,:idPersonaP)", nativeQuery = true)
     public void ingresarPreferenciaPuesto(@Param("idPuestoP") int idPuestoP, @Param("idPersonaP") int idPersonaP);
+    
+    @Modifying
+    @Query(value = "CALL ingresarPreferenciaModalidad(:idModalidadP,:idPersonaP)", nativeQuery = true)
+    public void ingresarPreferenciaModalidad(@Param("idModalidadP") int idModalidadP, @Param("idPersonaP") int idPersonaP);
+    
+    @Modifying
+    @Query(value = "CALL ingresarPreferenciaContrato(:idPersonaP, :idContratoP)", nativeQuery = true)
+    public void ingresarPreferenciaContrato(@Param("idPersonaP") int idPersonaP, @Param("idContratoP") int idContratoP);
+    
 }
