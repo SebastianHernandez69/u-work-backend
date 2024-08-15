@@ -15,6 +15,7 @@ import com.example.proyecto_analisis.models.ExperienciaLaboral;
 import com.example.proyecto_analisis.models.Persona;
 import com.example.proyecto_analisis.models.Solicitante;
 import com.example.proyecto_analisis.models.dto.ExperienciaLaboralDTO;
+import com.example.proyecto_analisis.models.dto.FamiliarSolicitanteDTO;
 import com.example.proyecto_analisis.models.dto.HistorialAcademicoDTO;
 import com.example.proyecto_analisis.models.dto.UsuarioDTO;
 import com.example.proyecto_analisis.services.PersonaService;
@@ -161,6 +162,69 @@ public class UsuarioDTOController {
 
             return ResponseEntity.ok("Insercion exitosa");
 
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        }
+    }
+
+    // Agg seguro de solicitante
+    @PostMapping("/usuario/agg-seguro-solicitante/{idPersona}")
+    public ResponseEntity<Object> aggSeguroSolicitante(@PathVariable int idPersona, @RequestBody Map<String,Object> seguroInfo){
+        try {
+            
+            int idTipoSeguro = ((Number) seguroInfo.get("tipoSeguro")).intValue();
+            Date fechaAfiliacion = java.sql.Date.valueOf((String) seguroInfo.get("fechaAfiliacion"));
+            Date fechaExpiracion = java.sql.Date.valueOf((String) seguroInfo.get("fechaExpiracion"));
+            String numeroAfiliacion = ((String) seguroInfo.get("numeroAfiliacion"));
+
+            solicitanteimpl.insertarSeguroSolicitante(idPersona,idTipoSeguro,fechaAfiliacion,fechaExpiracion,numeroAfiliacion);
+
+            return ResponseEntity.ok("Insercion exitosa");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/usuario/agg-familiar-solicitante/{idPersona}")
+    public ResponseEntity<Object> aggFamiliarSolicitante(@PathVariable int idPersona, @RequestBody FamiliarSolicitanteDTO familiarSolDTO){
+
+        try {
+            // Ingresar familiar
+            Persona nvaPersona = new Persona();
+
+            nvaPersona.setPrimerNombre(familiarSolDTO.getPrimerNombre());
+            nvaPersona.setSegundoNombre(familiarSolDTO.getSegundoNombre());
+            nvaPersona.setPrimerApellido(familiarSolDTO.getPrimerApellido());
+            nvaPersona.setSegundoApellido(familiarSolDTO.getSegundoApellido());
+            nvaPersona.setTelefono(familiarSolDTO.getTelefono());
+            nvaPersona.setIdentificacion(familiarSolDTO.getIdentificacion());
+            nvaPersona.setIdGenero(familiarSolDTO.getIdGenero());
+
+            int idFamiliar = personaImpl.ingresarPersona(nvaPersona);
+
+            // Ingresar familiar-parentesco
+            int idParentesco = familiarSolDTO.getIdParentesco();
+
+            solicitanteimpl.ingresarFamiliarSolicitante(idFamiliar, idParentesco, idPersona);
+
+            return ResponseEntity.ok("Insercion exitosa");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/usuario/agg-historial-medico-solicitante/{idPersona}")
+    public ResponseEntity<Object> aggHistorialMedicoSoli(@PathVariable int idPersona, @RequestBody Map<String, Object> hisMedInfo){
+        try {
+            
+            String descripcion = ((String) hisMedInfo.get("descripcion"));
+            int tipoCondicionMedica = ((Number) hisMedInfo.get("tipoCondicionMedica")).intValue();
+
+            solicitanteimpl.ingresarHistorialMedico(descripcion, tipoCondicionMedica, idPersona);
+
+            return ResponseEntity.ok("Insercion exitosa");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }

@@ -76,11 +76,41 @@ public class SolicitanteService {
         solicitanteRepositorio.insertarHistorialAcademico(idPersonaP, idNivelAcademicoP, idFormacionAcP, tituloP, fechaEgresoP, INSTITUCIONP);
     }
 
+    //Agg idiomas del solicitante
     public void ingresarSolicitanteIdioma(
         int idPersonaP,
         int idIdiomaP,
         int idNivelP
     ){
         solicitanteRepositorio.ingresarSolicitanteIdioma(idPersonaP, idIdiomaP, idNivelP);
+    }
+
+    //Agg informacion de seguro del solicitante
+    public void insertarSeguroSolicitante(
+        int idPersonaP,
+        int idTipoSeguroP,
+        Date fechaAfiliacionP,
+        Date fechaExpiracionP,
+        String numeroAfiliacionP
+    ){
+        solicitanteRepositorio.insertarSeguroSolicitante(idPersonaP,idTipoSeguroP,fechaAfiliacionP,fechaExpiracionP,numeroAfiliacionP);
+    }
+
+    // Agg familiar de solicitante
+    public void ingresarFamiliarSolicitante(
+        int idFamiliar, 
+        int idParentesco, 
+        int idSolicitante
+    ){
+        solicitanteRepositorio.ingresarFamiliarSolicitante(idFamiliar, idParentesco, idSolicitante);
+    }
+
+    // Agg historial medico solicitante
+    public void ingresarHistorialMedico(
+        String descripcion, 
+        int idCondicion, 
+        int idPersona
+    ){
+        solicitanteRepositorio.ingresarHistorialMedico(descripcion, idCondicion, idPersona);
     }
 }

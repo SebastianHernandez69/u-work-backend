@@ -35,4 +35,33 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
         @Param("idIdiomaP") int idIdiomaP,
         @Param("idNivelP") int idNivelP
     );
+
+    @Modifying
+    @Transactional
+    @Query(value = "CALL insertarSeguroSolicitante(:idPersonaP, :idTipoSeguroP, :fechaAfiliacionP, :fechaExpiracionP, :numeroAfiliacionP)", nativeQuery = true)
+    public void insertarSeguroSolicitante(
+        @Param("idPersonaP") int idPersonaP,
+        @Param("idTipoSeguroP") int idTipoSeguroP,
+        @Param("fechaAfiliacionP") Date fechaAfiliacionP,
+        @Param("fechaExpiracionP") Date fechaExpiracionP,
+        @Param("numeroAfiliacionP") String numeroAfiliacionP
+    );
+
+    @Modifying
+    @Transactional
+    @Query(value = "CALL ingresarFamiliarSolicitante(:idFamiliarP, :idParentescoP, :idSolicitante)", nativeQuery = true)
+    public void ingresarFamiliarSolicitante(
+        @Param("idFamiliarP") int idFamiliarP,
+        @Param("idParentescoP") int idParentescoP,
+        @Param("idSolicitante") int idSolicitante
+    );
+
+    @Modifying
+    @Transactional
+    @Query(value = "CALL ingresarHistorialMedico(:descripcionP, :idCondicionP, :idPersona)", nativeQuery = true)
+    public void ingresarHistorialMedico(
+        @Param("descripcionP") String descripcionP,
+        @Param("idCondicionP") int idCondicionP,
+        @Param("idPersona") int idPersona
+    );
 }

@@ -25,3 +25,12 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+
+{
+    "tipoSeguro": 1,
+    "fechaAfiliacion": "2023-01-05",
+    "fechaExpiracion": "2025-01-01",
+    "numeroAfiliacion": "AF978654231"
+}
