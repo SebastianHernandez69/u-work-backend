@@ -18,11 +18,12 @@ public class OfertaService {
     @Autowired
     private OfertaRepository ofertaRepository;
 
-    public OfertaDTO obtenerDetalleOferta(int idOferta){
+    public OfertaDTO obtenerDetalleOferta(int idOferta, int idSolicitante){
         try {
             OfertaDTO oferta = new OfertaDTO();
 
             Map<String, Object> detalleOferta = ofertaRepository.obtenerDetalleOferta(idOferta);
+            int aplicando = ofertaRepository.obtenerAplicacionSolicitante(idOferta, idSolicitante);
 
             oferta.setNombreOferta(detalleOferta.get("titulo").toString());
             oferta.setNombreEmpresa(detalleOferta.get("nombre_empresa").toString());
@@ -36,6 +37,7 @@ public class OfertaService {
             oferta.setTipoContratacion(detalleOferta.get("contrato").toString());
             oferta.setModalidad(detalleOferta.get("modalidad").toString());
             oferta.setNivelAcademico(detalleOferta.get("nivel_academico").toString());
+            oferta.setAplicando(aplicando);
 
             List<Object[]> puestosOferta = ofertaRepository.obtenerPuestosOferta(idOferta); //consulta con los puestos
             List<String> puestosStr = new ArrayList<>(); //Lista de Strings con los puestos

@@ -20,10 +20,10 @@ public class OfertasController {
     @Autowired
     private OfertaService ofertaService;
 
-    @GetMapping("/detalle/{idOferta}")
-    public ResponseEntity<OfertaDTO> obtenerDetalleOferta(@PathVariable int idOferta) {
+    @GetMapping("/detalle")
+    public ResponseEntity<OfertaDTO> obtenerDetalleOferta(@RequestParam("idOferta") int idOferta, @RequestParam("idSolicitante") int idSolicitante) {
         try {
-            return ResponseEntity.ok(ofertaService.obtenerDetalleOferta(idOferta));
+            return ResponseEntity.ok(ofertaService.obtenerDetalleOferta(idOferta, idSolicitante));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

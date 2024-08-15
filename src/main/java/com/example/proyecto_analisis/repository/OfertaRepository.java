@@ -35,6 +35,12 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                "WHERE ID_OFERTA = :idOferta", nativeQuery = true)
     public Map<String,Object> obtenerDetalleOferta(@Param("idOferta") int idOferta);
 
+
+    @Query(value = "select count(1) as aplicando "+
+                    "from solicitudes "+
+                    "where ID_SOLICITANTE=:idSolicitante and ID_OFERTA=:idOferta", nativeQuery = true)
+    public int obtenerAplicacionSolicitante(@Param("idOferta") int idOferta, @Param("idSolicitante") int idSolicitante);
+
     @Query(value = "SELECT B.PUESTO " +
         "FROM ofertas_puestos A " +
         "INNER JOIN puestos B " +

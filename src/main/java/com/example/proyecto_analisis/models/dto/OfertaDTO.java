@@ -34,6 +34,8 @@ public class OfertaDTO {
 
     private int cantidadAplicantes;
 
+    private int aplicando;
+
     private String tipoContratacion;
 
     private String modalidad;
