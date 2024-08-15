@@ -54,4 +54,16 @@ public class SolicitanteService {
         }
     }
 
+    public int ObtenerDatosVistaHome(String correo, String contrasena){
+
+        Solicitante solicitante = solicitanteRepositorio.autenticarSolicitante(correo, contrasena);
+
+        if(solicitante == null){
+            return 0;
+        } else {
+            return solicitante.getIdPersona();
+        }
+
+    }
+
 }
