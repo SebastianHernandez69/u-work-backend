@@ -144,4 +144,36 @@ public class SolicitanteService {
             return solicitudes;
         }
     }
+
+    // Obtener detalle notificacion
+    public Map<String,Object> obtenerDetalleNotificacionSolic(int idNotifSolicitanteP){
+
+        List<Object[]> objNotificacion = solicitanteRepositorio.obtenerDetalleNotificacionSolic(idNotifSolicitanteP);
+
+        if(objNotificacion.isEmpty()){
+            return Collections.emptyMap();
+        }else{
+            List<Map<String,Object>> notificaciones = objNotificacion.stream()
+                .map(obj -> {
+                    Map<String,Object> map = new LinkedHashMap<>();
+                    map.put("idNotificacion", obj[0]);
+                    map.put("titulo", obj[1]);
+                    map.put("logoEmpresa", obj[2]);
+                    map.put("nombreEmpresa", obj[3]);
+                    map.put("descripcion", obj[4]);
+                    map.put("fecha", obj[5]);
+                    map.put("idSolicitud", obj[6]);
+
+                    return map;
+                }).collect(Collectors.toList());
+
+            return notificaciones.get(0);
+        }
+        
+    }
+
+    // Cambiar estado de notificacion solicitante
+    public void cambiarEstadoNotiSolic(int idNotifSolicitanteP){
+        solicitanteRepositorio.cambiarEstadoNotiSolic(idNotifSolicitanteP);
+    }
 }

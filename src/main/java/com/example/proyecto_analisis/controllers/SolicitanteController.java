@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -90,4 +91,34 @@ public class SolicitanteController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener solicitudes del usuario: " + e.getMessage());
         }
     }
+
+    @GetMapping("/solicitante/detalle-notificacion/{idNotificacion}")
+    public ResponseEntity<Object> obtenerDetalleNotificacionSolic(@PathVariable int idNotificacion){
+        try {
+            
+            Map<String,Object> notificacion = solicitanteImpl.obtenerDetalleNotificacionSolic(idNotificacion);
+
+            if (notificacion.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notificacion no encontrada");
+            } else {
+                return ResponseEntity.ok(notificacion);
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    @PutMapping("/solicitante/act-estado-notificaicon/{idNotificacion}")
+    public ResponseEntity<String> cambiarEstadoNotiSolic(@PathVariable int idNotificacion){
+        try {
+            solicitanteImpl.cambiarEstadoNotiSolic(idNotificacion);
+
+            return ResponseEntity.ok("Se ha cambiado el estado correctamente");
+        } catch (Exception e) {
+            
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar: " + e.getMessage());
+
+        }
+    } 
 }
