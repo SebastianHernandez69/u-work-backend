@@ -96,4 +96,53 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
                    "WHERE ID_NOTIFICACION_SOL = :idNotifSolicitanteP", nativeQuery = true)
     public void cambiarEstadoNotiSolic(@Param("idNotifSolicitanteP") int idNotifSolicitanteP);
 
+
+    @Query(value = "(\n" + //
+                "  SELECT A.ID_OFERTA, DATE_FORMAT(A.FECHA_PUBLICACION, '%M %d, %Y') AS FECHA_PUBLICACION, A.TITULO, E.NOMBRE_EMPRESA, A.DESCRIPCION, E.URL_LOGO\n" + //
+                "  FROM ofertas AS A\n" + //
+                "  INNER JOIN requisitos_academicos AS B ON (A.ID_OFERTA = B.ID_OFERTA)\n" + //
+                "  INNER JOIN formacion_profesional AS C ON (B.ID_FORMACION_PROFESIONAL = C.ID_FORMACION_PROFESIONAL)\n" + //
+                "  INNER JOIN empresa AS E ON (E.ID_EMPRESA = A.ID_EMPRESA)\n" + //
+                "  INNER JOIN historial_academico AS D ON (C.ID_FORMACION_PROFESIONAL = D.ID_FORMACION_PROFESIONAL)\n" + //
+                "  WHERE D.ID_PERSONA = :idSolicitante\n" + //
+                ")\n" + //
+                "UNION\n" + //
+                "(\n" + //
+                "  SELECT A.ID_OFERTA, DATE_FORMAT(A.FECHA_PUBLICACION, '%M %d, %Y') AS FECHA_PUBLICACION, A.TITULO, E.NOMBRE_EMPRESA, A.DESCRIPCION, E.URL_LOGO\n" + //
+                "  FROM ofertas AS A\n" + //
+                "  INNER JOIN empresa AS E ON (E.ID_EMPRESA = A.ID_EMPRESA)\n" + //
+                "  INNER JOIN requisitos_laborales AS B ON (A.ID_OFERTA = B.ID_OFERTA)\n" + //
+                "  INNER JOIN puestos AS C ON (B.ID_PUESTO = C.ID_PUESTO)\n" + //
+                "  INNER JOIN EXPERIENCIA_LABORAL AS D ON (C.ID_PUESTO = D.ID_PUESTO)\n" + //
+                "  WHERE D.ID_PERSONA = :idSolicitante\n" + //
+                ")\n" + //
+                "UNION\n" + //
+                "(\n" + //
+                "  SELECT A.ID_OFERTA, DATE_FORMAT(A.FECHA_PUBLICACION, '%M %d, %Y') AS FECHA_PUBLICACION, A.TITULO, E.NOMBRE_EMPRESA, A.DESCRIPCION, E.URL_LOGO\n" + //
+                "  FROM ofertas AS A\n" + //
+                "  INNER JOIN empresa AS E ON (E.ID_EMPRESA = A.ID_EMPRESA)\n" + //
+                "  INNER JOIN NIVEL_ACADEMICO AS B ON (A.ID_NIVEL_ACADEMICO = B.ID_NIVEL_ACADEMICO)\n" + //
+                "  INNER JOIN HISTORIAL_ACADEMICO AS C ON (B.ID_NIVEL_ACADEMICO = C.ID_NIVEL_ACADEMICO)\n" + //
+                "  WHERE C.ID_PERSONA = :idSolicitante\n" + //
+                ")\n" + //
+                "LIMIT 10 OFFSET 0;",
+            nativeQuery = true)
+    public List<Object[]> obtenerOfertasFeedUsuario(@Param("idSolicitante") int idPersona);
+
+        //Obtener detalle de notificion
+    @Query(value = "SELECT \n" + //
+                    "    ID_NOTIFICACION_SOL, \n" + //
+                    "    TITULO, \n" + //
+                    "    DATE_FORMAT(FECHA, '%M %d, %Y') AS FECHA, \n" + //
+                    "    ESTADO_VISUALIZACION,\n" + //
+                    "    LEFT(DESCRIPCION, 30) AS DESCRIPCION\n" + //
+                    "FROM NOTIFICACIONES_SOLICITANTES\n" + //
+                    "WHERE ID_SOLICITANTE = :idSolicitante;", nativeQuery = true
+    )
+    public List<Object[]> obtenerVistaPrevNotificacion(@Param("idSolicitante") int idNotifSolicitanteP);
+
+    //Obtener detalle de notificion
+    @Query(value = "select * from tipo_empleo;", nativeQuery = true
+    )
+    public List<Object[]> obtenerCategorias();
 }

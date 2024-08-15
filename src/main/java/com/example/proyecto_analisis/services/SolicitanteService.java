@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.ExperienciaLaboral;
 import com.example.proyecto_analisis.models.Solicitante;
+import com.example.proyecto_analisis.models.dto.VistaInicioSolicitante_DTO;
 import com.example.proyecto_analisis.repository.ExperienciaLaboralRepository;
 import com.example.proyecto_analisis.repository.SolicitanteRepository;
 
@@ -176,4 +177,64 @@ public class SolicitanteService {
     public void cambiarEstadoNotiSolic(int idNotifSolicitanteP){
         solicitanteRepositorio.cambiarEstadoNotiSolic(idNotifSolicitanteP);
     }
+    public int ObtenerDatosVistaHome(String correo, String contrasena){
+
+        Solicitante solicitante = solicitanteRepositorio.autenticarSolicitante(correo, contrasena);
+
+        if(solicitante == null){
+            return 0;
+        } else {
+            return solicitante.getIdPersona();
+        }
+
+    }
+
+        // Obtener datos para vista de usuario
+        public VistaInicioSolicitante_DTO obtenerDatosParaVistaSolicitante(int idSolicitanteP){
+
+            VistaInicioSolicitante_DTO objVista = new VistaInicioSolicitante_DTO();
+
+            List<Object[]> objOfertas = solicitanteRepositorio.obtenerOfertasFeedUsuario(idSolicitanteP);
+    
+            List<Map<String,Object>> solicitudes = objOfertas.stream()
+            .map(obj -> {
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("idOferta", obj[0]);
+                map.put("fechaPublicacionOferta", obj[1]);
+                map.put("tituloOferta", obj[2]);
+                map.put("nombreEmpresa", obj[3]);
+                map.put("descripcion", obj[4]);
+                map.put("url_logo", obj[5]);
+
+                return map;
+            }).collect(Collectors.toList());
+            List<Object[]> objNotificacion = solicitanteRepositorio.obtenerVistaPrevNotificacion(idSolicitanteP);
+            List<Map<String,Object>> notificaciones = objNotificacion.stream()
+                .map(obj -> {
+                    Map<String,Object> map = new LinkedHashMap<>();
+                    map.put("idNotificacion", obj[0]);
+                    map.put("titulo", obj[1]);
+                    map.put("fecha", obj[2]);
+                    map.put("estado", obj[3]);
+                    map.put("descripcion", obj[4]);
+
+                    return map;
+                }).collect(Collectors.toList());
+            List<Object[]> objCategorias = solicitanteRepositorio.obtenerCategorias();
+            List<Map<String,Object>> categorias = objCategorias.stream()
+                .map(obj -> {
+                    Map<String,Object> map = new LinkedHashMap<>();
+                    map.put("idCategoria", obj[0]);
+                    map.put("categoria", obj[1]);
+                    return map;
+                }).collect(Collectors.toList());
+            objVista.setCategorias(categorias);
+            objVista.setIdSolicitante(idSolicitanteP);
+            objVista.setNotificaciones(notificaciones);
+            objVista.setOfertas(solicitudes);
+
+            return objVista;
+
+        }
+
 }

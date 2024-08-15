@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.proyecto_analisis.models.Solicitante;
 import com.example.proyecto_analisis.models.dto.ActPreferenciasDTO;
 import com.example.proyecto_analisis.models.dto.PreferenciasUsuarioDTO;
+import com.example.proyecto_analisis.models.dto.VistaInicioSolicitante_DTO;
 import com.example.proyecto_analisis.services.PreferenciasService;
 import com.example.proyecto_analisis.services.SolicitanteService;
 
@@ -121,4 +122,12 @@ public class SolicitanteController {
 
         }
     } 
+
+    @GetMapping("/solicitante/home/{idSolicitante}")
+    public ResponseEntity<VistaInicioSolicitante_DTO> obtenerVistaSolicitante(@PathVariable int idSolicitante){
+        VistaInicioSolicitante_DTO vista = solicitanteImpl.obtenerDatosParaVistaSolicitante(idSolicitante);
+
+        return ResponseEntity.ok(vista);
+    }
+
 }
