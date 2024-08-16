@@ -20,4 +20,14 @@ public interface SolicitudesRepository extends JpaRepository<Solicitante, Intege
     @Param(value = "idSolicitud") int idSolicitud, 
     @Param(value = "idEstadoSolicitud") int idEstadoSolicitud);
 
+    @Modifying
+    @Transactional
+    @Query(value = "CALL APLICAR_OFERTA(:idOferta,:idSolicitante, :idEstadoSolicitud, :emisorSolicitud, :descripcion);", nativeQuery = true)
+    public void crearSolicitud(
+    @Param(value = "idOferta") int idOferta,
+    @Param(value = "idSolicitante") int idSolicitante,
+    @Param(value = "idEstadoSolicitud") int idEstadoSolicitud,
+    @Param(value = "emisorSolicitud") int emisorSolicitud,
+    @Param(value = "descripcion") String descripcion);
+
 }
