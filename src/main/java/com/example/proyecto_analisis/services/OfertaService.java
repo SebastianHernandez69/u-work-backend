@@ -7,9 +7,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import com.example.proyecto_analisis.models.Oferta;
 import com.example.proyecto_analisis.models.dto.OfertaDTO;
+import com.example.proyecto_analisis.models.dto.OfertaEmpresaHomeDTO;
+import com.example.proyecto_analisis.repository.OfertaModelRepository;
 import com.example.proyecto_analisis.repository.OfertaRepository;
 
 @Service
@@ -17,6 +21,9 @@ public class OfertaService {
     
     @Autowired
     private OfertaRepository ofertaRepository;
+
+    @Autowired
+    private OfertaModelRepository ofertaModelRepository;
 
     public OfertaDTO obtenerDetalleOferta(int idOferta){
         try {
@@ -82,4 +89,62 @@ public class OfertaService {
         }
     }
 
+    public OfertaEmpresaHomeDTO obtenerHomeEmpresa(int idEmpresaP){
+        
+        OfertaEmpresaHomeDTO homeEmpresaDTO = new OfertaEmpresaHomeDTO();
+
+        List<Object[]> estadisticasHomeEmpresa = ofertaRepository.obtenerEstadisticasEmpresa(idEmpresaP);
+
+        List<Map<String,Object>> estadisticas = estadisticasHomeEmpresa.stream()
+            .map(obj-> {
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("nombreEmpresa", obj[0]);
+                map.put("cantidadOfertasActivas", obj[1]);
+                map.put("promedioSolicitantesOfertas", obj[2]);
+                return map;
+            }).collect(Collectors.toList());
+
+        Map<String, Object> est = estadisticas.get(0);
+        
+
+        //Porcentajes
+        Integer promHombre = ofertaRepository.obtenerPromedioHombres(idEmpresaP);
+        Integer promMujeres = 100 - promHombre;
+
+        String promHombreFormateado = String.valueOf(promHombre + "%");
+        String promMujerFormateado = String.valueOf(promMujeres + "%");
+
+        //Ofertas
+        List<Object[]> ofertasActivas = ofertaRepository.obtenerUltimasOfertasEmpresa(idEmpresaP);
+
+        //Notificaciones
+        List<Object[]> notificaciones = ofertaRepository.obtenerNotificionesEmpresa(idEmpresaP);
+        //Construccion DTO
+        homeEmpresaDTO.setNombreEmpresa((String) est.get("nombreEmpresa"));
+        homeEmpresaDTO.setCantOfertasAct((String) est.get("cantidadOfertasActivas"));
+        homeEmpresaDTO.setPromSolicitanteOfer((String) est.get("promedioSolicitantesOfertas"));
+        homeEmpresaDTO.setPorcentajeHombresAplicante(promHombreFormateado);
+        homeEmpresaDTO.setPorcentajeMujeresAplicante(promMujerFormateado);
+        homeEmpresaDTO.setOfertasActivas(ofertasActivas);
+        homeEmpresaDTO.setNotificaciones(notificaciones);
+
+        return homeEmpresaDTO;
+
+    }
+
+    // Ingresar nueva oferta
+    public int ingresarNvaOferta(Oferta oferta){
+        Oferta nvaOferta = ofertaModelRepository.save(oferta);
+        return nvaOferta.getIdOferta();
+    }
+
+    // Ingresar puesto-oferta
+    public void ingresarPuestoOferta(int idPuestoP, int idOfertaP){
+        ofertaRepository.ingresarPuestoOferta(idPuestoP, idOfertaP);
+    }
+
+    // Ingresar idioma-oferta
+    public void ingresarIdiomaOferta(int idNivelIdiomaP, int idOfertaP, int idIdiomaP){
+        ofertaRepository.ingresarIdiomaOferta(idNivelIdiomaP, idOfertaP, idIdiomaP);
+    }
 }
