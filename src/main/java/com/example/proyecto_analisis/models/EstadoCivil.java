@@ -2,6 +2,8 @@ package com.example.proyecto_analisis.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ public class EstadoCivil {
     
     @Id
     @Column(name = "id_estado_civil")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_estado_civil;
 
     @Column(name = "estado_civil")

@@ -25,5 +25,15 @@ public class GeneroServiceImpl implements GeneroService {
         return generoRepositorio.findById(idGenero)
             .orElseThrow(() -> new RuntimeException("Genero no encontrado"));
     }
+
+    @Override
+    public void eliminarGeneroPorId(int idGenero) {
+        generoRepositorio.deleteById(idGenero);
+    }
+
+    @Override
+    public void ingresarGenero(String genero) {
+        generoRepositorio.ingresarGenero(genero);
+    }
     
 }

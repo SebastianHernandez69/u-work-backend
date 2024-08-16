@@ -4,42 +4,42 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.proyecto_analisis.models.Genero;
-import com.example.proyecto_analisis.services.impl.GeneroServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.proyecto_analisis.models.Contrato;
+import com.example.proyecto_analisis.services.ContratoService;
 
 @RestController
-@RequestMapping("/api")
-public class GeneroController {
-    @Autowired
-    private GeneroServiceImpl generoImpl;
-
-    @GetMapping("/genero/mostrar")
-    public List<Genero> mostrarGeneros() {
-        return (List<Genero>) generoImpl.mostrarGeneros();
-    }
+@RequestMapping("/api/contrato")
+public class ContratoController {
     
-    @PostMapping("/genero/ingresar/{generoP}")
-    public ResponseEntity<String> ingresarGenero(@PathVariable String generoP){
+    @Autowired
+    private ContratoService contratoimpl;
+
+    @GetMapping("/mostrar")
+    public List<Contrato> mostrarContratos() {
+        return (List<Contrato>) contratoimpl.mostrarContratos();
+    }
+
+    @PostMapping("ingresar/{contratoP}")
+    public ResponseEntity<String> ingresarContrato(@PathVariable String contratoP){
         try {
-            generoImpl.ingresarGenero(generoP);
+            contratoimpl.ingresarContrato(contratoP);
             return ResponseEntity.ok("Ingresado correctamente");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: "+e.getMessage());
         }
     }
 
-    @PutMapping("/genero/eliminar/{idGeneroP}")
-    public ResponseEntity<String> eliminarGenero(@PathVariable int idGeneroP){
+    @PutMapping("/eliminar/{idContratoP}")
+    public ResponseEntity<String> eliminarContrato(@PathVariable int idContratoP){
         try {
-            generoImpl.eliminarGeneroPorId(idGeneroP);
+            contratoimpl.eliminarContratoPorID(idContratoP);
             return ResponseEntity.ok("eliminado correctamente");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: "+e.getMessage());

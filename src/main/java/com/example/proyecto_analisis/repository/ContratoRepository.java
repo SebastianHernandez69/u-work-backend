@@ -5,14 +5,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.proyecto_analisis.models.Genero;
+import com.example.proyecto_analisis.models.Contrato;
 
 import jakarta.transaction.Transactional;
 
-public interface GeneroRepository extends JpaRepository<Genero, Integer>{
-    
+public interface ContratoRepository extends JpaRepository<Contrato,Integer> {
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO generos (GENERO) VALUES (:GeneroP)",nativeQuery = true )
-    public void ingresarGenero(@Param("GeneroP") String GeneroP);
+    @Query(value = "INSERT INTO contratos (CONTRATO) VALUES (:contratoP)",nativeQuery = true )
+    public void ingresarContrato(@Param("contratoP") String contratoP);
 }
