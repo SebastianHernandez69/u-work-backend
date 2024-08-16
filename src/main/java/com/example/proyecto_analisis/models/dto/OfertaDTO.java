@@ -32,6 +32,10 @@ public class OfertaDTO {
 
     private int vacantes;
 
+    private int cantidadAplicantes;
+
+    private int aplicando;
+
     private String tipoContratacion;
 
     private String modalidad;
@@ -46,4 +50,5 @@ public class OfertaDTO {
 
     private List<Map<String, Object>> idiomas;
 
+    private List<String> aplicantesImg;
 }
