@@ -6,24 +6,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "INDUSTRIAS")
+@Table(name = "CONTRATOS")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Industria {
+public class Contrato {
 
     @Id
-    @Column(name = "ID_INDUSTRIA")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idIndustria;
+    @Column(name = "ID_CONTRATO")
+    private Integer idContrato;
 
-    @Column(name = "INDUSTRIA")
-    private String industria;
+    @Column(name = "CONTRATO", length = 45)
+    private String contrato;
+
 }

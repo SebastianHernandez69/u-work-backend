@@ -12,18 +12,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "INDUSTRIAS")
+@Table(name = "CONDICIONES_MEDICAS")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Industria {
+public class CondicionMedica {
 
     @Id
-    @Column(name = "ID_INDUSTRIA")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idIndustria;
+    @Column(name = "ID_CONDICIONE_MEDICA")
+    private Integer idCondicioneMedica;
 
-    @Column(name = "INDUSTRIA")
-    private String industria;
+    @Column(name = "CONDICION_MEDICAS", length = 45)
+    private String condicionMedicas;
+
 }
