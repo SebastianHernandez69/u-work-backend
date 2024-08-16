@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto_analisis.models.Solicitante;
+
+import jakarta.transaction.Transactional;
 
 public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
 
@@ -79,6 +82,80 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     nativeQuery = true)
     public List<Object[]> obtenerIdiomasOferta(@Param("idOferta") int idOferta);
 
+
+    //============================
+    @Query(value = "SELECT "+
+                    "    CAST(e.NOMBRE_EMPRESA AS CHAR) AS NOMBRE_EMPRESA, "+
+                    "    CAST(COUNT(o.ID_OFERTA) AS CHAR) AS ofertasActivas, "+
+                    "    CAST(AVG(sub.solicitantes_por_oferta) AS CHAR) AS promedio_solicitantes "+
+                    "FROM "+
+                    "    EMPRESA e "+
+                    "LEFT JOIN "+
+                    "    OFERTAS o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 "+
+                    "LEFT JOIN "+
+                    "    (SELECT o.ID_OFERTA, COUNT(s.ID_SOLICITANTE) AS solicitantes_por_oferta "+
+                    "    FROM OFERTAS o "+
+                    "    LEFT JOIN SOLICITUDES s ON o.ID_OFERTA = s.ID_OFERTA "+
+                    "    WHERE o.ESTADO_OFERTA = 1 "+
+                    "    AND o.ID_EMPRESA = :idEmpresaP "+
+                    "    GROUP BY o.ID_OFERTA "+
+                    "    ) AS sub ON o.ID_OFERTA = sub.ID_OFERTA "+
+                    "WHERE "+
+                    "    e.ID_EMPRESA = :idEmpresaP "+
+                    "GROUP BY "+
+                    "    e.NOMBRE_EMPRESA;", nativeQuery = true)
+    public List<Object[]> obtenerEstadisticasEmpresa(@Param("idEmpresaP") int idEmpresaP);
+
+    //Promedio hombres
+    @Query(value = "SELECT "+
+                    "    (COUNT(CASE WHEN p.GENERO_ID_GENERO = 1 THEN 1 END) * 100.0 / COUNT(*)) AS porcentajeHombres "+
+                    "FROM ofertas of "+
+                    "INNER JOIN solicitudes s ON of.ID_OFERTA = s.ID_OFERTA "+
+                    "INNER JOIN solicitantes soli ON s.ID_SOLICITANTE = soli.ID_PERSONA "+
+                    "INNER JOIN personas p ON soli.ID_PERSONA = p.ID_PERSONA "+
+                    "WHERE of.ID_EMPRESA = :idEmpresaP;",nativeQuery = true)
+    public Integer obtenerPromedioHombres(@Param("idEmpresaP") int idEmpresaP);
+
+    //ultimas ofertas
+    @Query(value = "SELECT "+
+                    "    ID_OFERTA, "+
+                    "    TITULO, "+
+                    "    SUBSTRING(DESCRIPCION, 1, 200) AS DESCRIPCION, "+
+                    "    DATE_FORMAT(FECHA_PUBLICACION, '%d %b, %Y') as FECHA_PUBLICACION "+
+                    "FROM ofertas "+
+                    "WHERE ID_EMPRESA = :idEmpresaP AND ESTADO_OFERTA = 1 "+
+                    "ORDER BY FECHA_PUBLICACION DESC "+
+                    "LIMIT 3;", nativeQuery = true)
+    public List<Object[]> obtenerUltimasOfertasEmpresa(@Param("idEmpresaP") int idEmpresaP);
+
+    //notificaciones
+    @Query(value = "SELECT"+
+                    "    ne.ID_NOTIFICACION_EMP,"+
+                    "    ne.TITULO,"+
+                    "    DATE_FORMAT(ne.fecha, '%d %b, %Y') as fechaNotificion,"+
+                    "    ne.estado_visualizacion,"+
+                    "    em.url_logo "+
+                    "FROM notificaciones_empresas ne "+
+                    "INNER JOIN empresa em on ne.ID_EMPRESA = em.ID_EMPRESA "+
+                    "WHERE em.ID_EMPRESA = :idEmpresaP ", nativeQuery = true)
+    public List<Object[]> obtenerNotificionesEmpresa(@Param("idEmpresaP") int idEmpresaP);
+
+    // Agg oferta-puesto
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO ofertas_puestos(ID_PUESTO, ID_OFERTA) "+
+                    "VALUES (:idPuestoP,:idOfertaP)", nativeQuery = true)
+    public void ingresarPuestoOferta(@Param("idPuestoP") int idPuestoP, @Param("idOfertaP") int idOfertaP);
+
+    // Agg oferta-idiomas
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO ofertas_idiomas(ID_NIVEL_IDIOMA, ID_OFERTA, ID_IDIOMA) "+
+                    "VALUES (:idNivelIdiomaP,:idOfertaP,:idIdiomaP)", nativeQuery = true)
+    public void ingresarIdiomaOferta(@Param("idNivelIdiomaP") int idNivelIdiomaP,
+                                    @Param("idOfertaP") int idOfertaP,
+                                    @Param("idIdiomaP") int idIdiomaP
+    );
     @Query(value = "SELECT A.TITULO, " +
     "DATE_FORMAT(A.FECHA_PUBLICACION, '%M %d, %Y') AS fecha_publicacion, " +
     "DATE_FORMAT(A.FECHA_EXPIRACION, '%M %d, %Y') AS fecha_expiracion, " +
