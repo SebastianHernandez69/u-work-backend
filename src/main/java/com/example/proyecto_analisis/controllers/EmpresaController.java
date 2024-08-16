@@ -8,15 +8,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.proyecto_analisis.models.Empresa;
 import com.example.proyecto_analisis.models.Persona;
 import com.example.proyecto_analisis.models.dto.EmpresaDirectorDTO;
+import com.example.proyecto_analisis.models.dto.VistaInicioSolicitante_DTO;
+import com.example.proyecto_analisis.models.dto.VistaPerfilEmpresa_DTO;
 import com.example.proyecto_analisis.services.EmpresaService;
 import com.example.proyecto_analisis.services.PersonaService;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/api")
-public class EmpresaDirectorDTOController {
+@RequestMapping("/api/empresa")
+public class EmpresaController {
     
     @Autowired
     private PersonaService personaImpl;
@@ -25,7 +30,7 @@ public class EmpresaDirectorDTOController {
     private EmpresaService empresaImpl;
 
 
-    @PostMapping("/empresa/ingresar")
+    @PostMapping("/ingresar")
     public ResponseEntity<EmpresaDirectorDTO> ingresarEmpresaDirector(@RequestBody EmpresaDirectorDTO empresaDirectorDTO){
 
 
@@ -54,6 +59,13 @@ public class EmpresaDirectorDTOController {
         empresaImpl.ingresarEmpresa(nvoEmpresa);
 
         return ResponseEntity.ok(empresaDirectorDTO);
+    }
+
+    @GetMapping("/perfil/{idEmpresa}")
+    public ResponseEntity<VistaPerfilEmpresa_DTO> obtenerVistaPerfilEmpresa(@PathVariable int idEmpresa){
+        VistaPerfilEmpresa_DTO vista = empresaImpl.obtenerVistaPerfilEmpresa(idEmpresa);
+
+        return ResponseEntity.ok(vista);
     }
     
 }
