@@ -5,13 +5,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.proyecto_analisis.models.Industria;
+import com.example.proyecto_analisis.models.NivelIdioma;
 
 import jakarta.transaction.Transactional;
 
-public interface IndustriaRepository extends JpaRepository<Industria, Integer> {
+public interface NivelIdiomaRepository extends JpaRepository<NivelIdioma,Integer> {
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO industrias (INDUSTRIA) VALUES (:industriaP)",nativeQuery = true )
-    public void ingresarIndustria(@Param("industriaP") String industriaP);
+    @Query(value = "INSERT INTO nivel_idioma (NIVEL_IDIOMA) VALUES (:nivelIdiomaP)",nativeQuery = true )
+    public void ingresarNivelIdioma(@Param("nivelIdiomaP") String nivelIdiomaP);
 }

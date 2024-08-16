@@ -1,37 +1,29 @@
 package com.example.proyecto_analisis.models;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "lugares")
+@Table(name = "TIPO_EMPLEO")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Lugar {
-    
+public class TipoEmpleo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_lugar")
-    private int id_lugar;
+    @Column(name = "ID_TIPO_EMPLEO")
+    private Integer idTipoEmpleo;
 
-    @Column(name = "nombre_lugar")
-    private String nombre_lugar;
-
-    @Column(name = "id_tipo_lugar")
-    private int id_tipo_lugar;
-
-    @Column(name = "id_lugar_padre")
-    private Integer id_lugar_padre;
+    @Column(name = "TIPO_EMPLEO", length = 45)
+    private String tipoEmpleo;
 
 }
+

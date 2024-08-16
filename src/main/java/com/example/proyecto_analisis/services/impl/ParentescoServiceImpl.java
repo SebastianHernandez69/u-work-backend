@@ -19,5 +19,15 @@ public class ParentescoServiceImpl implements ParentescoService {
     public List<Parentesco> mostrarParentescos() {
         return (List<Parentesco>) parentescoRepositorio.findAll();
     }
+
+    @Override
+    public void eliminarParentesco(int idParentesco) {
+        parentescoRepositorio.deleteById(idParentesco);
+    }
+
+    @Override
+    public void ingresaParentesco(String parentesco) {
+        parentescoRepositorio.ingresarParentesco(parentesco);
+    }
     
 }

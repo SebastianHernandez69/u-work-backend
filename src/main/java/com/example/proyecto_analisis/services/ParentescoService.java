@@ -8,4 +8,8 @@ public interface ParentescoService {
     
     public List<Parentesco> mostrarParentescos();
 
+    public void eliminarParentesco(int idParentesco);
+
+    public void ingresaParentesco(String parentesco);
+
 }
