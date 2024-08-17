@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.proyecto_analisis.models.Empresa;
 import com.example.proyecto_analisis.models.Persona;
 import com.example.proyecto_analisis.models.dto.EmpresaDirectorDTO;
+import com.example.proyecto_analisis.models.dto.OfertaEmpresaHomeDTO;
 import com.example.proyecto_analisis.models.dto.VistaInicioSolicitante_DTO;
 import com.example.proyecto_analisis.models.dto.VistaPerfilEmpresa_DTO;
 import com.example.proyecto_analisis.services.EmpresaService;
+import com.example.proyecto_analisis.services.OfertaService;
 import com.example.proyecto_analisis.services.PersonaService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,9 @@ public class EmpresaController {
 
     @Autowired
     private EmpresaService empresaImpl;
+
+    @Autowired
+    private OfertaService ofertaService;
 
 
     @PostMapping("/ingresar")
@@ -66,6 +71,16 @@ public class EmpresaController {
         VistaPerfilEmpresa_DTO vista = empresaImpl.obtenerVistaPerfilEmpresa(idEmpresa);
 
         return ResponseEntity.ok(vista);
+    }
+
+    @GetMapping("/home/{idEmpresa}")
+    public ResponseEntity<OfertaEmpresaHomeDTO> homeEmpresa(@PathVariable int idEmpresa){
+        try {
+            OfertaEmpresaHomeDTO home = ofertaService.obtenerHomeEmpresa(idEmpresa);
+            return ResponseEntity.ok(home);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
     
 }

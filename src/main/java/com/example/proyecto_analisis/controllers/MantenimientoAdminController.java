@@ -3,6 +3,8 @@ package com.example.proyecto_analisis.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -340,6 +342,27 @@ public class MantenimientoAdminController {
             return ResponseEntity.ok("eliminado correctamente");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    @GetMapping("/tabs")
+    public ResponseEntity<String> obtenerTablas(){
+        try {
+            String tablas = condicionMedicaImpl.obtenerTablas();
+
+            return ResponseEntity.ok(tablas);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("error: ");
+        }
+    }
+
+    @GetMapping("/nomTabs")
+    public ResponseEntity<List<String>> nomTablas(){
+        try {
+            List<String> tabs = condicionMedicaImpl.nomTablas();
+            return ResponseEntity.ok(tabs);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

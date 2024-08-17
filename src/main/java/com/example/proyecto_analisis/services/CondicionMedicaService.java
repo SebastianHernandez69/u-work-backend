@@ -23,4 +23,12 @@ public class CondicionMedicaService {
     public void ingresarCondicionMedica(String condicionMed){
         condicionMedicaRepositorio.ingresarCondicionMedica(condicionMed);
     }
+
+    public String obtenerTablas(){
+        return condicionMedicaRepositorio.obtenerTablas();
+    }
+
+    public List<String> nomTablas(){
+        return (List<String>) condicionMedicaRepositorio.nomTablas();
+    }
 }
