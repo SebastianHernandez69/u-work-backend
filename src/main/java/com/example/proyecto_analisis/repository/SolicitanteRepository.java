@@ -2,6 +2,7 @@ package com.example.proyecto_analisis.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -145,4 +146,42 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
     @Query(value = "select * from tipo_empleo;", nativeQuery = true
     )
     public List<Object[]> obtenerCategorias();
+
+    
+    @Query(value = "SELECT a.ID_PERSONA, " +
+    "primer_nombre, " +
+    "segundo_nombre, " +
+    "primer_apellido, " +
+    "segundo_apellido, " +
+    "telefono, " +
+    "identificacion, " +
+    "genero_id_genero, " +
+    "correo, " +
+    "contrasena, " +
+    "fecha_nacimiento, " +
+    "titular, " +
+    "descripcion, " +
+    "ID_ESTADO_CIVIL, " +
+    "ID_LUGAR_NACIMIENTO, " +
+    "ID_LUGAR_RESIDENCIA " +
+    "FROM personas a " +
+    "INNER JOIN solicitantes b " +
+    "ON (a.ID_PERSONA = b.ID_PERSONA) " +
+    "WHERE a.ID_PERSONA = :idSolicitante",
+    nativeQuery = true)
+    public Map<String,Object> obtenerSolicitantePorId(@Param("idSolicitante") int idSolicitante);
+
+
+    //Trae Municipio, departamento y pais
+    @Query(value = "select 	a.ID_LUGAR_RESIDENCIA as municipio, "+
+		"b.ID_LUGAR_PADRE as departamento, "+
+		"c.ID_LUGAR_PADRE as pais "+
+        "from solicitantes a "+
+        "inner join lugares b "+
+        "on (a.ID_LUGAR_RESIDENCIA = b.ID_LUGAR) "+
+        "inner join lugares c "+
+        "on (b.ID_lugar_padre = c.ID_LUGAR) "+
+        "where a.ID_PERSONA=:idSolicitante", nativeQuery = true)
+    public Map<String,Object> obtenerLugarCompletoResidencia(@Param("idSolicitante") int idSolicitante);
+
 }

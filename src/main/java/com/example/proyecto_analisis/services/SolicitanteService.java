@@ -1,5 +1,9 @@
 package com.example.proyecto_analisis.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.ExperienciaLaboral;
 import com.example.proyecto_analisis.models.Solicitante;
+import com.example.proyecto_analisis.models.dto.UsuarioDTO;
 import com.example.proyecto_analisis.models.dto.VistaInicioSolicitante_DTO;
 import com.example.proyecto_analisis.repository.ExperienciaLaboralRepository;
 import com.example.proyecto_analisis.repository.SolicitanteRepository;
@@ -25,6 +30,46 @@ public class SolicitanteService {
 
     @Autowired
     private ExperienciaLaboralRepository expLabRepositorio;
+
+    public UsuarioDTO obtenerSolicitantePorId(int idUsuario) {
+        try {
+            Map<String, Object> solicitanteData = solicitanteRepositorio.obtenerSolicitantePorId(idUsuario);
+            Map<String, Object> lugarCompleto = solicitanteRepositorio.obtenerLugarCompletoResidencia(idUsuario);
+            UsuarioDTO solicitante = new UsuarioDTO();
+            
+            solicitante.setPrimerNombre(safeToString(solicitanteData.get("primer_nombre")));
+            solicitante.setSegundoNombre(safeToString(solicitanteData.get("segundo_nombre")));
+            solicitante.setPrimerApellido(safeToString(solicitanteData.get("primer_apellido")));
+            solicitante.setSegundoApellido(safeToString(solicitanteData.get("segundo_apellido")));
+            solicitante.setIdentificacion(safeToString(solicitanteData.get("identificacion")));
+            solicitante.setTelefono(safeToString(solicitanteData.get("telefono")));
+            solicitante.setIdGenero(safeToString(solicitanteData.get("genero_id_genero")));
+            solicitante.setCorreo(safeToString(solicitanteData.get("correo")));
+            solicitante.setContrasena(safeToString(solicitanteData.get("contrasena")));
+    
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date birthDate = solicitanteData.get("fecha_nacimiento") != null ? formatter.parse(solicitanteData.get("fecha_nacimiento").toString()) : null;
+            solicitante.setFechaNacimiento(birthDate);
+            
+            solicitante.setTitular(safeToString(solicitanteData.get("titular")));
+            solicitante.setDescripcion(safeToString(solicitanteData.get("descripcion")));
+            solicitante.setIdEstadoCivil(safeToString(solicitanteData.get("id_estado_civil")));
+            solicitante.setIdLugarNacimiento(safeToString(solicitanteData.get("id_lugar_nacimiento")));
+            solicitante.setIdPaisResidencia(safeToString(lugarCompleto.get("pais")));
+            solicitante.setIdDepartamentoResidencia(safeToString(lugarCompleto.get("departamento")));
+            solicitante.setIdMunicipioResidencia(safeToString(lugarCompleto.get("municipio")));
+    
+            return solicitante;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String safeToString(Object value) {
+        return value != null ? value.toString() : null;
+    }
+    
 
     public void ingresarSolicitante(Solicitante solicitante){
         solicitanteRepositorio.save(solicitante);

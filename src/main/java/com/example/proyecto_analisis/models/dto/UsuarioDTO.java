@@ -31,9 +31,13 @@ public class UsuarioDTO {
 
     private Date fechaNacimiento;
 
-    private String Titular;
+    private String titular;
     
-    private String idLugarResidencia;
+    private String idPaisResidencia;
+
+    private String idDepartamentoResidencia;
+    
+    private String idMunicipioResidencia;
 
     private String idLugarNacimiento;
 
