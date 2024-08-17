@@ -1,6 +1,5 @@
 package com.example.proyecto_analisis.models;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,25 +12,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "lugares")
+@Table(name = "TIPO_LUGAR")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Lugar {
-    
+@NoArgsConstructor
+public class TipoLugar {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_lugar")
-    private int id_lugar;
+    @Column(name = "ID_TIPO_LUGAR")
+    private int idTipoLugar;
 
-    @Column(name = "nombre_lugar")
-    private String nombre_lugar;
-
-    @Column(name = "id_tipo_lugar")
-    private int id_tipo_lugar;
-
-    @Column(name = "id_lugar_padre")
-    private Integer id_lugar_padre;
-
+    @Column(name = "TIPO_LUGAR", length = 100)
+    private String tipoLugar;
 }
+

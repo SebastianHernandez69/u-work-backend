@@ -17,4 +17,12 @@ public class IndustriaService {
     public List<Industria> mostrarIndustrias(){
         return industriaRepositorio.findAll();
     }
+
+    public void eliminarIndustriaPorId(int idIndustriaP){
+        industriaRepositorio.deleteById(idIndustriaP);
+    }
+
+    public void ingresarIndustria(String industriaP){
+        industriaRepositorio.ingresarIndustria(industriaP);
+    }
 }

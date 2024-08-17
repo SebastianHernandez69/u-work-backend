@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.proyecto_analisis.models.Puesto;
 
+import jakarta.transaction.Transactional;
+
 public interface PuestoRepository extends JpaRepository<Puesto, Integer> {
     
     @Query(value = "SELECT "+
@@ -56,4 +58,13 @@ public interface PuestoRepository extends JpaRepository<Puesto, Integer> {
     @Query(value = "CALL ingresarPreferenciaContrato(:idPersonaP, :idContratoP)", nativeQuery = true)
     public void ingresarPreferenciaContrato(@Param("idPersonaP") int idPersonaP, @Param("idContratoP") int idContratoP);
     
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO tipo_seguros (TIPO_SEGURO) VALUES (:tipoSeguroP)",nativeQuery = true )
+    public void ingresarTipoSeguro(@Param("tipoSeguroP") String tipoSeguroP);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO puestos (PUESTO) VALUES (:puestoP)",nativeQuery = true )
+    public void ingresarPuesto(@Param("puestoP") String puestoP);
 }
