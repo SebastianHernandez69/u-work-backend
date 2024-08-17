@@ -11,9 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DatosPA_DTO {
     
-    private String primerNombre;
-
-    private String primerApellido;
+    private String nombre;
 
     private String titular;
 

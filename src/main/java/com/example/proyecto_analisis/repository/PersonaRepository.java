@@ -22,8 +22,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer>{
     public List<String> obtenerFamiliares(@Param("idSolicitante") int idSolicitante);
 
     //PERFIL APLICANTE
-    @Query(value = "SELECT p.primer_nombre as primerNombre,"+
-                    "    p.primer_apellido as primerApellido,"+
+    @Query(value = "SELECT concat(p.primer_nombre, ' ', p.primer_apellido) as nombre,"+
                     "    so.titular as titular,"+
                     "    l.nombre_lugar as lugarResidencia,"+
                     "    CONCAT(p.telefono,'') as telefono,"+

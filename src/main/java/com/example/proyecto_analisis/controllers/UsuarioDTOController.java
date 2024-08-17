@@ -24,6 +24,9 @@ import com.example.proyecto_analisis.services.SolicitanteService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -36,6 +39,16 @@ public class UsuarioDTOController {
     @Autowired
     private SolicitanteService solicitanteimpl;
 
+
+    @GetMapping("/usuario/obtener/{idUsuario}")
+    public ResponseEntity<UsuarioDTO> getMethodName(@PathVariable int idUsuario) {
+        try {
+            return ResponseEntity.ok(solicitanteimpl.obtenerSolicitantePorId(idUsuario));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    
 
     @PostMapping("/usuario/ingresar")
     public ResponseEntity<UsuarioDTO> ingresarUsuario(@RequestBody UsuarioDTO usuarioDTO){
@@ -60,7 +73,7 @@ public class UsuarioDTOController {
         nvoSolicitante.setFechaNacimiento(usuarioDTO.getFechaNacimiento());
         nvoSolicitante.setTitular(usuarioDTO.getTitular());
         nvoSolicitante.setDescripcion(usuarioDTO.getDescripcion());
-        nvoSolicitante.setLugarResidencia(Integer.parseInt(usuarioDTO.getIdLugarResidencia()));
+        nvoSolicitante.setLugarResidencia(Integer.parseInt(usuarioDTO.getIdPaisResidencia()));
         nvoSolicitante.setLugarNacimiento(Integer.parseInt(usuarioDTO.getIdLugarNacimiento()));
         nvoSolicitante.setEstadoCivil(Integer.parseInt(usuarioDTO.getIdGenero()));
 
@@ -91,7 +104,7 @@ public class UsuarioDTOController {
         solicitante.setFechaNacimiento(usuarioDtoActualizado.getFechaNacimiento());
         solicitante.setTitular(usuarioDtoActualizado.getTitular());
         solicitante.setDescripcion(usuarioDtoActualizado.getDescripcion());
-        solicitante.setLugarResidencia(Integer.parseInt(usuarioDtoActualizado.getIdLugarResidencia()));
+        solicitante.setLugarResidencia(Integer.parseInt(usuarioDtoActualizado.getIdPaisResidencia()));
         solicitante.setLugarNacimiento(Integer.parseInt(usuarioDtoActualizado.getIdLugarNacimiento()));
         solicitante.setEstadoCivil(Integer.parseInt(usuarioDtoActualizado.getIdGenero()));
 
