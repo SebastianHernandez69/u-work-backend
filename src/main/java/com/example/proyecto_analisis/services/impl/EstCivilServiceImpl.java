@@ -19,5 +19,15 @@ public class EstCivilServiceImpl implements EstCivilService{
     public List<EstadoCivil> mostrarEstadosCiviles() {
         return(List<EstadoCivil>) estCivilRepositorio.findAll();
     }
+
+    @Override
+    public void eliminarEstadoCivilPorId(int idEstadoCivilP){
+        estCivilRepositorio.deleteById(idEstadoCivilP);
+    }
+
+    @Override
+    public void ingresarEstadoCivil(String estadoCivil){
+        estCivilRepositorio.ingresarEstadoCivil(estadoCivil);
+    }
     
 }

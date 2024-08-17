@@ -73,19 +73,20 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
 
 
     //Obtener detalle de notificion
-    @Query(value = "SELECT "+
-                    "    ns.id_notificacion_sol,"+
-                    "    ns.titulo,"+
-                    "    em.url_logo,"+
-                    "    em.nombre_empresa,"+
-                    "    ns.descripcion,"+
-                    "    DATE_FORMAT(ns.fecha, '%d %b, %Y') as fechaEnvio,"+
-                    "    ns.id_solicitud "+
-                    "FROM notificaciones_solicitantes ns "+
-                    "INNER JOIN solicitudes s on ns.ID_SOLICITUD = s.ID_SOLICITUD "+
-                    "INNER JOIN ofertas of on s.ID_OFERTA = of.ID_OFERTA "+
-                    "INNER JOIN empresa em on of.ID_EMPRESA = em.ID_EMPRESA "+
-                    "WHERE ns.ID_NOTIFICACION_SOL = :idNotifSolicitanteP;", nativeQuery = true
+    @Query(value = "SELECT \r\n" + //
+                "    ns.id_notificacion_sol, \r\n" + //
+                "    ns.titulo, \r\n" + //
+                "    em.url_logo, \r\n" + //
+                "    em.nombre_empresa, \r\n" + //
+                "    ns.descripcion, \r\n" + //
+                "    DATE_FORMAT(ns.fecha, '%d %b, %Y') as fechaEnvio, \r\n" + //
+                "    ns.id_solicitud \r\n" + //
+                "FROM notificaciones_solicitantes ns \r\n" + //
+                "INNER JOIN solicitudes s on ns.ID_SOLICITUD = s.ID_SOLICITUD \r\n" + //
+                "INNER JOIN ofertas o on s.ID_OFERTA = o.ID_OFERTA \r\n" + //
+                "INNER JOIN empresa em on o.ID_EMPRESA = em.ID_EMPRESA \r\n" + //
+                "WHERE ns.ID_NOTIFICACION_SOL = ?\r\n" + //
+                "", nativeQuery = true
                     )
     public List<Object[]> obtenerDetalleNotificacionSolic(@Param("idNotifSolicitanteP") int idNotifSolicitanteP);
 
@@ -93,7 +94,7 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
     @Modifying
     @Transactional
     @Query(value = "UPDATE `notificaciones_solicitantes` "+
-                   "SET ESTADO_VISUALIZACION = 0 "+
+                   "SET ESTADO_VISUALIZACION = 1 "+
                    "WHERE ID_NOTIFICACION_SOL = :idNotifSolicitanteP", nativeQuery = true)
     public void cambiarEstadoNotiSolic(@Param("idNotifSolicitanteP") int idNotifSolicitanteP);
 
@@ -126,7 +127,7 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
                 "  INNER JOIN HISTORIAL_ACADEMICO AS C ON (B.ID_NIVEL_ACADEMICO = C.ID_NIVEL_ACADEMICO)\n" + //
                 "  WHERE C.ID_PERSONA = :idSolicitante\n" + //
                 ")\n" + //
-                "LIMIT 10 OFFSET 0;",
+                "LIMIT 20 OFFSET 0;",
             nativeQuery = true)
     public List<Object[]> obtenerOfertasFeedUsuario(@Param("idSolicitante") int idPersona);
 

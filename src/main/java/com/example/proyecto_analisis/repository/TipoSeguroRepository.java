@@ -5,13 +5,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.proyecto_analisis.models.Industria;
+import com.example.proyecto_analisis.models.TipoSeguro;
 
 import jakarta.transaction.Transactional;
 
-public interface IndustriaRepository extends JpaRepository<Industria, Integer> {
+public interface TipoSeguroRepository extends JpaRepository<TipoSeguro,Integer> {
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO industrias (INDUSTRIA) VALUES (:industriaP)",nativeQuery = true )
-    public void ingresarIndustria(@Param("industriaP") String industriaP);
+    @Query(value = "INSERT INTO tipo_seguros (TIPO_SEGURO) VALUES (:tipoSeguroP)",nativeQuery = true )
+    public void ingresarTipoSeguro(@Param("tipoSeguroP") String tipoSeguroP);
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "generos")
+@Table(name = "GENEROS")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -21,6 +21,7 @@ public class Genero {
     @Column(name = "id_genero")
     private int id_genero;
 
+    @Column(name = "genero")
     private String genero;
 
 }

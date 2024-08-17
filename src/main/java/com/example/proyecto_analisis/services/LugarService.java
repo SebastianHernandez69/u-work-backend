@@ -14,11 +14,23 @@ public class LugarService {
     @Autowired
     private LugarRepository lugarRepositorio;
 
+    public List<Lugar> mostrarLugaresTodos(){
+        return (List<Lugar>) lugarRepositorio.findAll();
+    }
+
     public List<Lugar> mostrarPaises(int id_tipo_lugar){
         return lugarRepositorio.mostrarPaises(id_tipo_lugar);
     }
 
     public List<Lugar> mostrarLugares(int id_tipo_lugar, int id_lugar_padre){
         return lugarRepositorio.mostrarLugares(id_tipo_lugar,id_lugar_padre);
+    }
+
+    public void eliminarLugar(int idLugar){
+        lugarRepositorio.deleteById(idLugar);
+    }
+
+    public void ingresarLugar(String lugarP, int idTipoLugarP,int idLugarPadreP){
+        lugarRepositorio.ingresarLugar(lugarP,idTipoLugarP,idLugarPadreP);
     }
 }

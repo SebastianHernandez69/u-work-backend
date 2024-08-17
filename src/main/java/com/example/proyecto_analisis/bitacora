@@ -141,17 +141,17 @@ DELIMITER ;
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerAplicacionesSolicitante`(IN `idSolicitanteP` INT)
 BEGIN
-	SELECT of.id_oferta,
-		DATE_FORMAT(of.fecha_publicacion, '%d %b, %Y') as fechaPublicacion,
-        of.titulo,
+	SELECT o.id_oferta,
+		DATE_FORMAT(o.fecha_publicacion, '%d %b, %Y') as fechaPublicacion,
+        o.titulo,
         em.nombre_empresa,
         DATE_FORMAT(s.fecha_solicitud, '%d %b, %Y') as fechaSolicitud,
         es.estado_solicitud,
         em.url_logo
     FROM estado_solicitud es
     INNER JOIN solicitudes s on es.ID_ESTADO_SOLICITUD = s.ID_ESTADO_SOLICITUD
-    INNER JOIN ofertas of on s.ID_OFERTA = of.ID_OFERTA
-    INNER JOIN empresa em on of.ID_EMPRESA = em.ID_EMPRESA
+    INNER JOIN ofertas of on s.ID_OFERTA = o.ID_OFERTA
+    INNER JOIN empresa em on o.ID_EMPRESA = em.ID_EMPRESA
     WHERE s.ID_SOLICITANTE = idSolicitanteP
     ORDER BY s.FECHA_SOLICITUD ASC;
 END$$

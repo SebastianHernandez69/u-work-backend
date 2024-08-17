@@ -56,14 +56,13 @@ public class PersonaService {
 
             DatosPA_DTO datosPA_DTO = new DatosPA_DTO();
 
-            datosPA_DTO.setPrimerNombre(datos[0] != null ? datos[0].toString() : null);
-            datosPA_DTO.setPrimerApellido(datos[1] != null ? datos[1].toString() : null);
-            datosPA_DTO.setTitular(datos[2] != null ? datos[2].toString() : null);
-            datosPA_DTO.setLugarResidencia(datos[3] != null ? datos[3].toString() : null);
-            datosPA_DTO.setTelefono(datos[4] != null ? datos[4].toString() : null);
-            datosPA_DTO.setCorreo(datos[5] != null ? datos[5].toString() : null);
-            datosPA_DTO.setFechaNacimiento(datos[6] != null ? datos[6].toString() : null);
-            datosPA_DTO.setDescripcion(datos[7] != null ? datos[7].toString() : null);
+            datosPA_DTO.setNombre(datos[0] != null ? datos[0].toString() : null);
+            datosPA_DTO.setTitular(datos[1] != null ? datos[1].toString() : null);
+            datosPA_DTO.setLugarResidencia(datos[2] != null ? datos[2].toString() : null);
+            datosPA_DTO.setTelefono(datos[3] != null ? datos[3].toString() : null);
+            datosPA_DTO.setCorreo(datos[4] != null ? datos[4].toString() : null);
+            datosPA_DTO.setFechaNacimiento(datos[5] != null ? datos[5].toString() : null);
+            datosPA_DTO.setDescripcion(datos[6] != null ? datos[6].toString() : null);
             
             return datosPA_DTO;
         }
