@@ -89,13 +89,13 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "    CAST(COUNT(o.ID_OFERTA) AS CHAR) AS ofertasActivas, "+
                     "    CAST(AVG(sub.solicitantes_por_oferta) AS CHAR) AS promedio_solicitantes "+
                     "FROM "+
-                    "    EMPRESA e "+
+                    "    empresa e "+
                     "LEFT JOIN "+
-                    "    OFERTAS o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 "+
+                    "    ofertas o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 "+
                     "LEFT JOIN "+
                     "    (SELECT o.ID_OFERTA, COUNT(s.ID_SOLICITANTE) AS solicitantes_por_oferta "+
-                    "    FROM OFERTAS o "+
-                    "    LEFT JOIN SOLICITUDES s ON o.ID_OFERTA = s.ID_OFERTA "+
+                    "    FROM ofertas o "+
+                    "    LEFT JOIN solicitudes s ON o.ID_OFERTA = s.ID_OFERTA "+
                     "    WHERE o.ESTADO_OFERTA = 1 "+
                     "    AND o.ID_EMPRESA = :idEmpresaP "+
                     "    GROUP BY o.ID_OFERTA "+
@@ -109,11 +109,11 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     //Promedio hombres
     @Query(value = "SELECT "+
                     "    (COUNT(CASE WHEN p.GENERO_ID_GENERO = 1 THEN 1 END) * 100.0 / COUNT(*)) AS porcentajeHombres "+
-                    "FROM ofertas of "+
-                    "INNER JOIN solicitudes s ON of.ID_OFERTA = s.ID_OFERTA "+
+                    "FROM ofertas o "+
+                    "INNER JOIN solicitudes s ON o.ID_OFERTA = s.ID_OFERTA "+
                     "INNER JOIN solicitantes soli ON s.ID_SOLICITANTE = soli.ID_PERSONA "+
                     "INNER JOIN personas p ON soli.ID_PERSONA = p.ID_PERSONA "+
-                    "WHERE of.ID_EMPRESA = :idEmpresaP;",nativeQuery = true)
+                    "WHERE o.ID_EMPRESA = :idEmpresaP;",nativeQuery = true)
     public Integer obtenerPromedioHombres(@Param("idEmpresaP") int idEmpresaP);
 
     //ultimas ofertas
@@ -190,4 +190,14 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "where a.id_oferta = :idOferta "+
                     "limit 4", nativeQuery=true)
     public List<Object[]> obtenerFotosSolicitantes(@Param("idOferta") int idOferta);
+
+    @Query(value = "SELECT ID_OFERTA,"+
+                    "        TITULO,"+
+                    "        SUBSTRING(DESCRIPCION,1,200),"+
+                    "        DATE_FORMAT(FECHA_PUBLICACION, '%d %b, %Y') as FECHA_PUBLICACION,"+
+                    "        ESTADO_OFERTA "+
+                    "FROM ofertas "+
+                    "WHERE ID_EMPRESA = :idEmpresaP "+
+                    "ORDER BY FECHA_PUBLICACION DESC;",nativeQuery = true)
+    public List<Object[]> obtenerOfertasPorEmpresaId(@Param("idEmpresaP") int idEmpresaP);
 }

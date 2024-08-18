@@ -9,7 +9,6 @@ import com.example.proyecto_analisis.models.Empresa;
 import com.example.proyecto_analisis.models.Persona;
 import com.example.proyecto_analisis.models.dto.EmpresaDirectorDTO;
 import com.example.proyecto_analisis.models.dto.OfertaEmpresaHomeDTO;
-import com.example.proyecto_analisis.models.dto.VistaInicioSolicitante_DTO;
 import com.example.proyecto_analisis.models.dto.VistaPerfilEmpresa_DTO;
 import com.example.proyecto_analisis.services.EmpresaService;
 import com.example.proyecto_analisis.services.OfertaService;

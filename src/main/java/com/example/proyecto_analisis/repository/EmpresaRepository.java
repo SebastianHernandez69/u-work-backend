@@ -14,8 +14,8 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer>{
     public Empresa autenticarDirectorEmpresa(String correo, String contrasena);
 
     @Query(value = "SELECT concat(A.PRIMER_NOMBRE, ' ' , A.PRIMER_APELLIDO) AS NOMBRE, A.TELEFONO\n" + //
-                "FROM PERSONAS AS A\n" + //
-                "INNER JOIN EMPRESA AS E\n" + //
+                "FROM personas AS A\n" + //
+                "INNER JOIN empresa AS E\n" + //
                 "ON (E.ID_DIRECTOR = A.ID_PERSONA)\n" + //
                 "WHERE ID_EMPRESA = :idEmpresa", nativeQuery = true)
     public List<Object[]> obtenerInfoDirector(@Param("idEmpresa") int idEmpresa);

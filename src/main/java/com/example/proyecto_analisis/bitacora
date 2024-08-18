@@ -177,3 +177,75 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+
+
+//============================
+//      SP envia notificacion empresa
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `enviarNotificacionEmpresa`(
+    IN ID_PERSONA_P INT, 
+    IN ID_OFERTA_P INT,
+    IN ID_ESTADO_SOLICITUD_P INT,
+    IN ID_SOLICITUD_P INT
+)
+BEGIN
+    DECLARE oferTitulo VARCHAR(255);
+    DECLARE idEmpresa INT;
+    DECLARE nombreSolicitante VARCHAR(255);
+
+    -- Obtener el nombre completo del solicitante
+    SELECT CONCAT(PRIMER_NOMBRE, ' ', PRIMER_APELLIDO) 
+    INTO nombreSolicitante
+    FROM personas 
+    WHERE ID_PERSONA = ID_PERSONA_P;
+
+    -- Obtener el título de la oferta y el ID de la empresa
+    SELECT TITULO, ID_EMPRESA 
+    INTO oferTitulo, idEmpresa
+    FROM ofertas
+    WHERE id_oferta = ID_OFERTA_P;
+
+    -- Insertar notificación si el estado de la solicitud es 3
+    IF ID_ESTADO_SOLICITUD_P = 3 THEN 
+        INSERT INTO notificaciones_empresas (
+            TITULO, 
+            DESCRIPCION, 
+            FECHA, 
+            ESTADO_VISUALIZACION, 
+            ID_EMPRESA, 
+            ID_SOLICITUD
+        ) 
+        VALUES (
+            'SOLICITUD ACEPTADA',
+            CONCAT('Nos complace informarle que ', nombreSolicitante, ' ha aceptado la oferta de empleo ', oferTitulo, ' que usted extendió a través de nuestra plataforma. Agradecemos su confianza en nuestra aplicación para facilitar este proceso.'),
+            CURDATE(),
+            0,
+            idEmpresa,
+            ID_SOLICITUD_P
+        );
+    END IF;
+    -- si fue rechazada
+	IF ID_ESTADO_SOLICITUD_P = 4 THEN 
+        INSERT INTO notificaciones_empresas (
+            TITULO, 
+            DESCRIPCION, 
+            FECHA, 
+            ESTADO_VISUALIZACION, 
+            ID_EMPRESA, 
+            ID_SOLICITUD
+        ) 
+        VALUES (
+            'SOLICITUD RECHAZADA',
+            CONCAT('Le informamos que ', nombreSolicitante, ' ha decidido rechazar la oferta de empleo ', oferTitulo, ' que usted extendió a través de nuestra plataforma. Agradecemos su confianza en nuestra aplicación para facilitar el proceso.'),
+            CURDATE(),
+            0,
+            idEmpresa,
+            ID_SOLICITUD_P
+        );
+    END IF;
+
+END$$
+DELIMITER ;

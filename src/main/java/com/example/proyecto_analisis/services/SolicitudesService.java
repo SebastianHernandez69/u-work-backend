@@ -26,4 +26,14 @@ public class SolicitudesService {
                         solicitud.getDescripcion());
     }
 
+    // cambiar estado solicitud
+    public void aceptarRechazarSolicitudSolicitante(int idEstadoSolicitudP, int idSolicitudP, int idSolicitanteP){
+
+            solicitudesRepository.actualizarEstadoSolicitud(idSolicitudP, idEstadoSolicitudP);
+            int idOferta = solicitudesRepository.obtenerIdOfertaSolicitud(idSolicitudP, idSolicitanteP);
+
+            solicitudesRepository.enviarNotificacionEmpresa(idSolicitanteP,idOferta,idEstadoSolicitudP,idSolicitudP);
+    
+    }
+
 }
