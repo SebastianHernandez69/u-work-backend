@@ -396,37 +396,6 @@ public class MantenimientoAdminController {
         }
     }
 
-    //===================================
-
-
-@Autowired
-    private NivelIdiomaService nivelIdiomaService;
-
-    @GetMapping("/nivel-idioma/mostrar")
-    public List<NivelIdioma> mostrarNivelIdioma() {
-        return (List<NivelIdioma>) nivelIdiomaService.mostrarNivelIdioma();
-    }
-
-    @PostMapping("/nivel-idioma/ingresar/{nivelIdioma}")
-    public ResponseEntity<String> ingresarNivelIdioma(@PathVariable String nivelIdioma){
-        try {
-            nivelIdiomaService.ingresarNivelIdioma(nivelIdioma);
-            return ResponseEntity.ok("Ingresado correctamente");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
-        }
-    }
-
-    @PutMapping("/nivel-idioma/eliminar/{idNivelIdioma}")
-    public ResponseEntity<String> eliminarNivelIdioma(@PathVariable int idNivelIdioma){
-        try {
-            nivelIdiomaService.eliminarNivelIdioma(idNivelIdioma);
-            return ResponseEntity.ok("eliminado correctamente");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: "+ e.getMessage());
-        }
-    }
-
     //=============================================
     @Autowired
     private GeneroServiceImpl generoImpl;
