@@ -88,5 +88,17 @@ public class OfertasController {
         }
     }
     
+    //Obtener ofertas por empresa id
+    @GetMapping("/mostrar/{idEmpresa}")
+    public ResponseEntity<Object> obtenrOfertasEmpresaId(@PathVariable int idEmpresa){
+        try {
+            
+            List<Map<String,Object>> ofertasEmpresa = ofertaService.obtenerOfertasPorEmpresaId(idEmpresa);
+
+            return ResponseEntity.ok(ofertasEmpresa);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
 
 }
