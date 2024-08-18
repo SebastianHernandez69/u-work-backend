@@ -36,5 +36,9 @@ public class NvaOfertaDTO {
     
     private int lugar;
     
+    private List<Integer> requisitosAcademicos;
+
+    private List<Integer> experienciaLaboral;
+
     private List<Map<String,Integer>> idiomas;
 }

@@ -101,4 +101,21 @@ public class OfertasController {
         }
     }
 
+    @GetMapping("/obtener/{idOferta}")
+    public ResponseEntity<Object> obtenerOfertaEditable(@PathVariable int idOferta){
+        try {
+            
+            NvaOfertaDTO nvaOfertaDTO = ofertaService.obtenerOfertaEditable(idOferta);
+
+        if (nvaOfertaDTO != null) {
+            return ResponseEntity.ok(nvaOfertaDTO);
+        } else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada");
+        }
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
 }

@@ -90,13 +90,13 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
              "    CAST(AVG(sub.solicitantes_por_oferta) AS CHAR) AS promedio_solicitantes, " +
              "    e.URL_LOGO " +
              "FROM " +
-             "    EMPRESA e " +
+             "    empresa e " +
              "LEFT JOIN " +
-             "    OFERTAS o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 " +
+             "    ofertas o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 " +
              "LEFT JOIN " +
              "    (SELECT o.ID_OFERTA, COUNT(s.ID_SOLICITANTE) AS solicitantes_por_oferta " +
-             "    FROM OFERTAS o " +
-             "    LEFT JOIN SOLICITUDES s ON o.ID_OFERTA = s.ID_OFERTA " +
+             "    FROM ofertas o " +
+             "    LEFT JOIN solicitudes s ON o.ID_OFERTA = s.ID_OFERTA " +
              "    WHERE o.ESTADO_OFERTA = 1 " +
              "    AND o.ID_EMPRESA = :idEmpresaP " +
              "    GROUP BY o.ID_OFERTA " +
@@ -208,4 +208,35 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     @Transactional
     @Query(value = "DELETE FROM ofertas WHERE ID_OFERTA = :idOfertaP",nativeQuery = true)
     public void eliminarOfertaPorId(@Param("idOfertaP") int idOfertaP);
+
+    //===============================================================
+    //*********************TRAER OFERTA PARA EDITAR*************** */
+
+    @Query(value = "SELECT TITULO,"+
+                            "PLAZAS_DISPONIBLES,"+
+                            "FECHA_EXPIRACION, "+
+                            "DESCRIPCION,"+
+                            "ID_TIPO_EMPLEO, "+
+                            "ID_CONTRATO,"+
+                            "ID_NIVEL_ACADEMICO, "+
+                            "ID_MODALIDAD, "+
+                            "ID_LUGAR "+
+                    "FROM ofertas WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public Object[] obtenerOfertaEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta puesto
+    @Query(value = "SELECT ID_PUESTO FROM ofertas_puestos WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Integer> obtenerOfertaPuestoEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta requisitos-academicos
+    @Query(value = "SELECT ID_FORMACION_PROFESIONAL FROM requisitos_academicos WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Integer> obtenerOfertaReqAcadeEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta experiencia-laboral
+    @Query(value = "SELECT ID_REQUISITOS_LABORALES FROM requisitos_laborales WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Integer> obtenerOfertaReqLaborEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta-idiomas
+    @Query(value = "SELECT ID_IDIOMA, ID_NIVEL_IDIOMA FROM ofertas_idiomas WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Object[]> obtenerOfertaIdiomaEditable(@Param("idOfertaP") int idOfertaP);
 }
