@@ -185,4 +185,10 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
         "where a.ID_PERSONA=:idSolicitante", nativeQuery = true)
     public Map<String,Object> obtenerLugarCompletoResidencia(@Param("idSolicitante") int idSolicitante);
 
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO solicitudes (ID_OFERTA, ID_SOLICITANTE, ID_ESTADO_SOLICITUD, EMISOR_SOLICITUD, DESCRIPCION, FECHA_SOLICITUD) " +
+                   "VALUES (:idOferta, :idSolicitante, 1, 1, 'Solicitud enviada', SYSDATE())", nativeQuery = true)
+    public void insertarSolicitud(@Param("idSolicitante") int idSolicitante, @Param("idOferta") int idOferta);
+
 }
