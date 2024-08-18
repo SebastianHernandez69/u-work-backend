@@ -24,8 +24,8 @@ public class NotificacionEmpresaService {
             Map<String,Object> notificacion = new HashMap<>();
             notificacion.put("idNotificacion", data[0]);
             notificacion.put("titulo", data[1]);
-            notificacion.put("urlLogoEmpresa", data[2]);
-            notificacion.put("nombreEmpresa", data[3]);
+            notificacion.put("logoEmpresa", data[3]);
+            notificacion.put("nombreEmpresa", data[2]);
             notificacion.put("descripcion", data[4]);
             notificacion.put("fechaEnvio", data[5]);
             notificacion.put("idSolicitud", data[6]);
