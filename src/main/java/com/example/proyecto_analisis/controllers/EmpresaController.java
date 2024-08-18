@@ -20,6 +20,7 @@ import com.example.proyecto_analisis.services.PersonaService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -97,6 +98,17 @@ public class EmpresaController {
             return ResponseEntity.ok(notificacion);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al obtener notificacion: "+ e.getMessage());
+        }
+    }
+
+    //Eliminar oferta de empresa
+    @PutMapping("/oferta/eliminar/{idOferta}")
+    public ResponseEntity<String> eliminarOfertaPorId(@PathVariable int idOferta){
+        try {
+            ofertaService.eliminarOfertaPorId(idOferta);
+            return ResponseEntity.ok("Oferta eliminada con exito");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al eliminar oferta: "+e.getMessage());
         }
     }
     
