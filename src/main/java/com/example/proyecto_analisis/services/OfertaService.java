@@ -295,8 +295,8 @@ public class OfertaService {
             List<Map<String,Integer>> idiomas = objIdiomas.stream()
                 .map(obj -> {
                     Map<String,Integer> map = new LinkedHashMap<>();
-                    map.put("idioma", (Integer) obj[0]);
-                    map.put("nivelIdioma", (Integer) obj[1]);
+                    map.put("idIdioma", (Integer) obj[0]);
+                    map.put("idNivelIdioma", (Integer) obj[1]);
                     return map;
                 }).collect(Collectors.toList());
 
