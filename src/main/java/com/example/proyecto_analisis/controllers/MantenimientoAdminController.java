@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +22,7 @@ import com.example.proyecto_analisis.models.Industria;
 import com.example.proyecto_analisis.models.Lugar;
 import com.example.proyecto_analisis.models.Modalidad;
 import com.example.proyecto_analisis.models.NivelAcademico;
+import com.example.proyecto_analisis.models.NivelIdioma;
 import com.example.proyecto_analisis.models.Parentesco;
 import com.example.proyecto_analisis.models.Puesto;
 import com.example.proyecto_analisis.models.TipoEmpleo;
@@ -36,6 +36,7 @@ import com.example.proyecto_analisis.services.IndustriaService;
 import com.example.proyecto_analisis.services.LugarService;
 import com.example.proyecto_analisis.services.ModalidadService;
 import com.example.proyecto_analisis.services.NivelAcademicoService;
+import com.example.proyecto_analisis.services.NivelIdiomaService;
 import com.example.proyecto_analisis.services.PuestoService;
 import com.example.proyecto_analisis.services.TipoEmpleoService;
 import com.example.proyecto_analisis.services.TipoLugarService;
@@ -506,6 +507,36 @@ public class MantenimientoAdminController {
     public ResponseEntity<String> eliminarFormacionProfPorId(@PathVariable int idFormacionProfP){
         try {
             formProfesionalImpl.eliminarFormacionProfPorId(idFormacionProfP);
+            return ResponseEntity.ok("eliminado correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    //====================================================
+
+    @Autowired
+    private NivelIdiomaService nivelIdiomaService;
+
+    @GetMapping("/nivel-idioma/mostrar")
+    public List<NivelIdioma> mostrarNivelIdioma() {
+        return (List<NivelIdioma>) nivelIdiomaService.mostrarNivelIdioma();
+    }
+
+    @PostMapping("/nivel-idioma/ingresar/{nivelIdioma}")
+    public ResponseEntity<String> ingresarNivelIdioma(@PathVariable String nivelIdioma){
+        try {
+            nivelIdiomaService.ingresarNivelIdioma(nivelIdioma);
+            return ResponseEntity.ok("Ingresado correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    @PutMapping("/nivel-idioma/eliminar/{idNivelIdioma}")
+    public ResponseEntity<String> eliminarNivelIdioma(@PathVariable int idNivelIdioma){
+        try {
+            nivelIdiomaService.eliminarNivelIdioma(idNivelIdioma);
             return ResponseEntity.ok("eliminado correctamente");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: "+e.getMessage());

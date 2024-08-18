@@ -191,4 +191,14 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "where a.id_oferta = :idOferta "+
                     "limit 4", nativeQuery=true)
     public List<Object[]> obtenerFotosSolicitantes(@Param("idOferta") int idOferta);
+
+    @Query(value = "SELECT ID_OFERTA,"+
+                    "        TITULO,"+
+                    "        SUBSTRING(DESCRIPCION,1,200),"+
+                    "        DATE_FORMAT(FECHA_PUBLICACION, '%d %b, %Y') as FECHA_PUBLICACION,"+
+                    "        ESTADO_OFERTA "+
+                    "FROM ofertas "+
+                    "WHERE ID_EMPRESA = :idEmpresaP "+
+                    "ORDER BY FECHA_PUBLICACION DESC;",nativeQuery = true)
+    public List<Object[]> obtenerOfertasPorEmpresaId(@Param("idEmpresaP") int idEmpresaP);
 }

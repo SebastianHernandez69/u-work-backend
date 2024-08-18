@@ -229,4 +229,23 @@ public class OfertaService {
         }
     }
 
+    // Obtener ofertas por el id de la empresa
+    public List<Map<String,Object>> obtenerOfertasPorEmpresaId(int idEmpresaP){
+
+        List<Object[]> objOfertas = ofertaRepository.obtenerOfertasPorEmpresaId(idEmpresaP);
+
+        List<Map<String,Object>> ofertas = objOfertas.stream()
+            .map(obj ->{
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("idOfertas", obj[0]);
+                map.put("nombreOferta", obj[1]);
+                map.put("descripcion", obj[2]);
+                map.put("fechaPublicacion", obj[3]);
+                map.put("estadoOferta", obj[4]);
+                return map;
+            }).collect(Collectors.toList());
+
+            return ofertas;
+    }
+
 }
