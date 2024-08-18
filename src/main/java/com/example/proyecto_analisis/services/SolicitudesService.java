@@ -33,7 +33,13 @@ public class SolicitudesService {
             int idOferta = solicitudesRepository.obtenerIdOfertaSolicitud(idSolicitudP, idSolicitanteP);
 
             solicitudesRepository.enviarNotificacionEmpresa(idSolicitanteP,idOferta,idEstadoSolicitudP,idSolicitudP);
-    
+    }
+// cambiar estado solicitud empresa
+    public void cambiarEstadoSolicitudEmpresa(int idEstadoSolicitudP, int idSolicitudP){
+
+        solicitudesRepository.actualizarEstadoSolicitud(idSolicitudP, idEstadoSolicitudP);
+
+        solicitudesRepository.enviarNotificacionSolicitante(idEstadoSolicitudP, idSolicitudP);
     }
 
 }
