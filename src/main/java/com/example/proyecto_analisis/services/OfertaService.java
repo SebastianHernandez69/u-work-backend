@@ -1,15 +1,18 @@
 package com.example.proyecto_analisis.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.Oferta;
+import com.example.proyecto_analisis.models.dto.NvaOfertaDTO;
 import com.example.proyecto_analisis.models.dto.OfertaDTO;
 import com.example.proyecto_analisis.models.dto.OfertaEmpresaHomeDTO;
 import com.example.proyecto_analisis.repository.OfertaModelRepository;
@@ -104,6 +107,7 @@ public class OfertaService {
                 map.put("nombreEmpresa", obj[0]);
                 map.put("cantidadOfertasActivas", obj[1]);
                 map.put("promedioSolicitantesOfertas", obj[2]);
+                map.put("fotoEmpresa", obj[3]);
                 return map;
             }).collect(Collectors.toList());
 
@@ -124,6 +128,7 @@ public class OfertaService {
         List<Object[]> notificaciones = ofertaRepository.obtenerNotificionesEmpresa(idEmpresaP);
         //Construccion DTO
         homeEmpresaDTO.setNombreEmpresa((String) est.get("nombreEmpresa"));
+        homeEmpresaDTO.setLogoEmpresa((String) est.get("fotoEmpresa"));
         homeEmpresaDTO.setCantOfertasAct((String) est.get("cantidadOfertasActivas"));
         homeEmpresaDTO.setPromSolicitanteOfer((String) est.get("promedioSolicitantesOfertas"));
         homeEmpresaDTO.setPorcentajeHombresAplicante(promHombreFormateado);
@@ -150,6 +155,17 @@ public class OfertaService {
     public void ingresarIdiomaOferta(int idNivelIdiomaP, int idOfertaP, int idIdiomaP){
         ofertaRepository.ingresarIdiomaOferta(idNivelIdiomaP, idOfertaP, idIdiomaP);
     }
+
+    // Ingresar requisitos-academicos
+    public void ingresarReqAcadeOferta(int idOfertaP, int idFormacionProf){
+        ofertaRepository.ingresarReqAcadeOferta(idOfertaP, idFormacionProf);
+    }
+
+    // Ingresar requisitos laborales
+    public void ingresarReqLaboOferta(int idPuestoP, int idOfertaP){
+        ofertaRepository.ingresarReqLaboOferta(idPuestoP, idOfertaP);
+    }
+
     public OfertaDTO obtenerDetalleOfertaEmpresa(int idOferta){
         try {
             OfertaDTO oferta = new OfertaDTO();
@@ -246,4 +262,54 @@ public class OfertaService {
             return ofertas;
     }
 
+    // Eliminar oferta por ifOferta
+    public void eliminarOfertaPorId(int idOferta){
+        ofertaRepository.eliminarOfertaPorId(idOferta);
+    }
+
+    //=======================================
+    //TRAER OFERTA EDITABLE
+    public NvaOfertaDTO obtenerOfertaEditable(int idOferta){
+        
+        NvaOfertaDTO nvaOfertaDTO = new NvaOfertaDTO();
+
+        Object[] objOferta = ofertaRepository.obtenerOfertaEditable(idOferta);
+        if (objOferta instanceof Object[]) {
+            Object[] data = (Object[]) objOferta[0];
+
+            nvaOfertaDTO.setTitulo((String )data[0]);
+            nvaOfertaDTO.setPlazasDisponibles((Integer) data[1]);
+            nvaOfertaDTO.setFechaExpiracion((Date) data[2]);
+            nvaOfertaDTO.setDescripcion((String) data[3]);
+            nvaOfertaDTO.setTipoEmpleo((Integer) data[4]);
+            nvaOfertaDTO.setTipoContrato((Integer) data[5]);
+            nvaOfertaDTO.setNivelAcademico((Integer) data[6]);
+            nvaOfertaDTO.setModalidad((Integer) data[7]);
+            nvaOfertaDTO.setLugar((Integer) data[8]);
+
+            List<Integer> puestos = ofertaRepository.obtenerOfertaPuestoEditable(idOferta);
+            List<Integer> reqAcade = ofertaRepository.obtenerOfertaReqAcadeEditable(idOferta);
+            List<Integer> reqLabo = ofertaRepository.obtenerOfertaReqLaborEditable(idOferta);
+
+            List<Object[]> objIdiomas = ofertaRepository.obtenerOfertaIdiomaEditable(idOferta);
+
+            List<Map<String,Integer>> idiomas = objIdiomas.stream()
+                .map(obj -> {
+                    Map<String,Integer> map = new LinkedHashMap<>();
+                    map.put("idioma", (Integer) obj[0]);
+                    map.put("nivelIdioma", (Integer) obj[1]);
+                    return map;
+                }).collect(Collectors.toList());
+
+            nvaOfertaDTO.setExperienciaLaboral(reqLabo);
+            nvaOfertaDTO.setRequisitosAcademicos(reqAcade);
+            nvaOfertaDTO.setPuestos(puestos);
+            nvaOfertaDTO.setIdiomas(idiomas);
+
+            return nvaOfertaDTO;
+        } else {
+            return null;
+        }
+
+    }
 }

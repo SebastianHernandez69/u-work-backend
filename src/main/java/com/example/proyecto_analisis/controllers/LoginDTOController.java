@@ -28,7 +28,7 @@ public class LoginDTOController {
         return ResponseEntity.ok(idPersonaSoli);
     }
 
-    @GetMapping("/login/empresa")
+    @PostMapping("/login/empresa")
     public ResponseEntity<Integer> autenticarDirectorEmpresa(@RequestBody LoginDTO loginDTO){
         int idDirectorEmpresa = empresaImpl.autenticarDirectorEmpresa(loginDTO.getCorreo(), loginDTO.getContrasena());
         return ResponseEntity.ok(idDirectorEmpresa);

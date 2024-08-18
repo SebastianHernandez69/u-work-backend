@@ -73,6 +73,18 @@ public class OfertasController {
                 ofertaService.ingresarIdiomaOferta(idNivelIdioma, idOferta, idIdioma);
             }
 
+            // Agg requisitos academicos
+            List<Integer> reqAca = nvaOfertaDTO.getRequisitosAcademicos();
+            for (Integer idReqAca : reqAca) {
+                ofertaService.ingresarReqAcadeOferta(idOferta, idReqAca);
+            }
+
+            // Agg experiencia laboral
+            List<Integer> reqLab = nvaOfertaDTO.getExperienciaLaboral();
+            for (Integer idReqLab : reqLab) {
+                ofertaService.ingresarReqLaboOferta(idReqLab,idOferta);
+            }
+
             return ResponseEntity.ok("Oferta ingresada");
             
         } catch (Exception e) {
@@ -96,6 +108,23 @@ public class OfertasController {
             List<Map<String,Object>> ofertasEmpresa = ofertaService.obtenerOfertasPorEmpresaId(idEmpresa);
 
             return ResponseEntity.ok(ofertasEmpresa);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    @GetMapping("/obtener/{idOferta}")
+    public ResponseEntity<Object> obtenerOfertaEditable(@PathVariable int idOferta){
+        try {
+            
+            NvaOfertaDTO nvaOfertaDTO = ofertaService.obtenerOfertaEditable(idOferta);
+
+        if (nvaOfertaDTO != null) {
+            return ResponseEntity.ok(nvaOfertaDTO);
+        } else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada");
+        }
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: "+e.getMessage());
         }
