@@ -12,7 +12,7 @@ import com.example.proyecto_analisis.models.interfaces.PersonaInterface;
 public interface PersonaRepository extends JpaRepository<Persona, Integer>{
     
     @Query(value = "SELECT id_persona, CONCAT(p.PRIMER_NOMBRE, ' ', IFNULL(p.SEGUNDO_NOMBRE, ''), ' ', p.PRIMER_APELLIDO, ' ', p.SEGUNDO_APELLIDO) AS nombreCompleto " +
-                   "FROM PERSONAS p " +
+                   "FROM personas p " +
                    "WHERE p.IDENTIFICACION = :identificacion", nativeQuery = true)
     public PersonaInterface obtenerUsuarioPorIdentidad(@Param("identificacion")String identificacion);
     

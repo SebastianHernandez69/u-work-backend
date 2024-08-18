@@ -1,5 +1,7 @@
 package com.example.proyecto_analisis.controllers;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import com.example.proyecto_analisis.models.dto.EmpresaDirectorDTO;
 import com.example.proyecto_analisis.models.dto.OfertaEmpresaHomeDTO;
 import com.example.proyecto_analisis.models.dto.VistaPerfilEmpresa_DTO;
 import com.example.proyecto_analisis.services.EmpresaService;
+import com.example.proyecto_analisis.services.NotificacionEmpresaService;
 import com.example.proyecto_analisis.services.OfertaService;
 import com.example.proyecto_analisis.services.PersonaService;
 
@@ -32,6 +35,9 @@ public class EmpresaController {
 
     @Autowired
     private OfertaService ofertaService;
+
+    @Autowired
+    private NotificacionEmpresaService notificacionEmpresaImpl;
 
 
     @PostMapping("/ingresar")
@@ -79,6 +85,18 @@ public class EmpresaController {
             return ResponseEntity.ok(home);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    //obtener detalle notificacion empresa
+    @GetMapping("/notificacion/{idNotificacion}")
+    public ResponseEntity<Object> obtenerDetalleNotificacionEmpresa(@PathVariable int idNotificacion){
+        try {
+            Map<String,Object> notificacion = notificacionEmpresaImpl.obtenerNotificacionEmpresa(idNotificacion);
+            
+            return ResponseEntity.ok(notificacion);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener notificacion: "+ e.getMessage());
         }
     }
     

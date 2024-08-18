@@ -22,7 +22,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer>{
 
     @Query(value = "SELECT ID_OFERTA, TITULO, LEFT(DESCRIPCION, 30) AS DESCRIPCION, \n" + //
                 "\tDATE_FORMAT(FECHA_PUBLICACION, '%M %d, %Y') AS FECHA_PUBLICACION \n" + //
-                "FROM OFERTAS\n" + //
+                "FROM ofertas\n" + //
                 "WHERE ID_EMPRESA = :idEmpresa AND ESTADO_OFERTA = 1;", nativeQuery = true)
     public List<Object[]> obtenerInfoOfertas(@Param("idEmpresa") int idEmpresa);
 
@@ -37,11 +37,11 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer>{
         "        A.CORREO,\n" + //
         "        A.SITIO_WEB\n" + //
         "FROM empresa AS A\n" + //
-        "INNER JOIN INDUSTRIAS AS B\n" + //
+        "INNER JOIN industrias AS B\n" + //
         "ON (B.ID_INDUSTRIA = A.ID_INDUSTRIA)\n" + //
-        "INNER JOIN LUGARES AS L\n" + //
+        "INNER JOIN lugares AS L\n" + //
         "ON (L.ID_LUGAR = A.ID_DIRECCION)\n" + //
-        "INNER JOIN OFERTAS AS C\n" + //
+        "INNER JOIN ofertas AS C\n" + //
         "ON (A.ID_EMPRESA = C.ID_EMPRESA)\n" + //
         "WHERE C.ID_EMPRESA = :idEmpresa", nativeQuery = true)
     public  Map<String, Object> obtenerInfoEmpresa(@Param("idEmpresa") int idEmpresa);
