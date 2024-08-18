@@ -179,8 +179,6 @@ END $$
 DELIMITER ;
 
 
-
-
 //============================
 //      SP envia notificacion empresa
 
@@ -263,5 +261,98 @@ BEGIN
     
     DELETE FROM ofertas_idiomas WHERE ID_OFERTA = idOfertaP;
 
+END$$
+DELIMITER ;
+
+
+//===== CREAR UNA APLICACION A OFERTA
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `APLICAR_OFERTA`(
+IN p_idOferta int,
+IN p_idSolicitante int,
+IN p_idEstadoSolicitud int,
+IN p_emisorSolicitud int,
+IN p_descripcion varchar(200))
+BEGIN
+	DECLARE V_ID_EMPRESA INT;
+	DECLARE V_ID_SOLICITUD INT;
+	DECLARE V_NOMBRE_EMPRESA varchar(45);
+	DECLARE V_NOMBRE_SOLICITANTE varchar(45);
+	DECLARE V_NOMBRE_OFERTA varchar(45);
+	DECLARE V_DESCRIPCION_EMPRESA varchar(200);
+	DECLARE V_DESCRIPCION_SOLICITANTE varchar(200);
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'Error al aplicar la oferta' AS mensaje;
+    END;
+	
+	START TRANSACTION;
+	
+	INSERT INTO SOLICITUDES (`ID_OFERTA`, `ID_SOLICITANTE`, `ID_ESTADO_SOLICITUD`, `EMISOR_SOLICITUD`, `DESCRIPCION`, `FECHA_SOLICITUD`) VALUES
+	(p_idOferta, p_idSolicitante, p_idEstadoSolicitud, p_emisorSolicitud, p_descripcion, sysdate());
+	
+	SELECT B.ID_EMPRESA
+	INTO V_ID_EMPRESA
+	FROM OFERTAS A
+	INNER JOIN EMPRESA B
+	ON(A.ID_EMPRESA = B.ID_EMPRESA)
+	WHERE A.ID_OFERTA=p_idOferta;
+	
+	select nombre_empresa
+	into V_NOMBRE_EMPRESA
+	FROM empresa
+	where id_empresa = v_id_empresa;
+	
+	select concat(primer_nombre,' ', primer_apellido)
+	into V_NOMBRE_SOLICITANTE
+	FROM personas
+	WHERE ID_persona = p_idSolicitante;
+	
+	select titulo
+	into V_NOMBRE_OFERTA
+	FROM ofertas
+	WHERE ID_OFERTA = p_idOferta;
+	
+	SELECT id_solicitud
+	INTO v_id_solicitud
+	FROM solicitudes
+	WHERE id_solicitante = p_idSolicitante
+	AND id_oferta = p_idOferta
+	ORDER BY fecha_solicitud DESC
+	LIMIT 1;
+	
+	IF p_emisorSolicitud = 0 THEN
+		SET v_DESCRIPCION_EMPRESA = Concat('Hola ', v_nombre_empresa,', el usuario ', V_NOMBRE_SOLICITANTE, ' ha aplicado correctamente a la oferta ', V_NOMBRE_OFERTA, ', mensaje:  ', p_descripcion);
+        
+		SET V_DESCRIPCION_SOLICITANTE = Concat('Felicidades! ',V_NOMBRE_SOLICITANTE,' has aplicado correctamente a la oferta ',V_NOMBRE_OFERTA,' de la empresa ',v_nombre_empresa, ', mensaje:  ', p_descripcion);
+	else
+		SET v_DESCRIPCION_EMPRESA = Concat('Hola ', v_nombre_empresa, ', se ha enviado una solicitud de aplicacion de la oferta ', V_NOMBRE_OFERTA, ' al solicitante ', V_NOMBRE_SOLICITANTE, ', mensaje:  ', p_descripcion);
+		
+		SET V_DESCRIPCION_SOLICITANTE = Concat('Buen dia! ', V_NOMBRE_SOLICITANTE,' Has recibido una solicitud para aplicar a la oferta ',V_NOMBRE_OFERTA,' de la empresa ',v_nombre_empresa, '. Tu eliges si aplicar.', ' mensaje:  ', p_descripcion);
+	END IF;
+	
+	
+	INSERT INTO NOTIFICACIONES_EMPRESAS
+	(`TITULO`,
+	`DESCRIPCION`,
+	`FECHA`,
+	`ESTADO_VISUALIZACION`,
+	`ID_EMPRESA`,
+	`ID_SOLICITUD`)
+	VALUES
+	('Nueva aplicacion a una de tus ofertas',v_descripcion_empresa, sysdate(), 0, v_id_empresa, v_id_solicitud);
+	
+	INSERT INTO NOTIFICACIONES_SOLICITANTES
+	(`TITULO`,
+	`DESCRIPCION`,
+	`FECHA`,
+	`ID_SOLICITANTE`,
+	`ESTADO_VISUALIZACION`,
+	`ID_SOLICITUD`)
+	VALUES
+	('Nueva aplicacion a una oferta',V_DESCRIPCION_SOLICITANTE, sysdate(),p_idSolicitante, 0, v_id_solicitud);
+	COMMIT;
 END$$
 DELIMITER ;
