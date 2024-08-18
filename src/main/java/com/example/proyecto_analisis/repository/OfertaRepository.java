@@ -282,7 +282,7 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                 "ID_MODALIDAD = :idModalidadP, " +
                 "ID_LUGAR = :idLugarP " +
                 "WHERE ID_OFERTA = :idOfertaP", nativeQuery = true)
-    void actualizarTablaOferta(
+    public void actualizarTablaOferta(
         @Param("tituloP") String tituloP,
         @Param("plazasDispP") int plazasDispP,
         @Param("fechaExpiP") Date fechaExpiP,
@@ -295,4 +295,21 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
         @Param("idOfertaP") int idOfertaP
     );
 
+    //Obtener aplicantes oferta
+    @Query(value =  "SELECT ID_OFERTA,"+
+                    "        TITULO,"+
+                    "        DATE_FORMAT(FECHA_PUBLICACION, '%d %b, %Y') as FECHA_PUBLICACION "+
+                    "FROM ofertas "+
+                    "WHERE ID_OFERTA = :idOfertaP", nativeQuery = true)
+    public Object[] obtenerDetalleOfertaAplicante(@Param("idOfertaP") int idOfertaP);
+
+    @Query(value = "SELECT s.ID_PERSONA,"+
+                    "        CONCAT(p.primer_nombre,' ',p.segundo_nombre,' ',p.primer_apellido,' ',p.segundo_apellido) as nombreCompleto,"+
+                    "        DATE_FORMAT(soli.fecha_solicitud, '%d %b, %Y') as fechaSolicitud,"+
+                    "        soli.id_estado_solicitud "+
+                    "FROM solicitudes soli "+
+                    "INNER JOIN solicitantes s on soli.ID_SOLICITANTE = s.ID_PERSONA "+
+                    "INNER JOIN personas p on s.ID_PERSONA = p.ID_PERSONA "+
+                    "WHERE ID_OFERTA = :idOfertaP AND soli.EMISOR_SOLICITUD = 0", nativeQuery = true)
+    public List<Object[]> obtenerDetalleAplicanteOferta(@Param("idOfertaP") int idOfertaP);
 }

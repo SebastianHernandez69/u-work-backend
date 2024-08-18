@@ -358,4 +358,32 @@ public class OfertaService {
         }
 
     }
+
+    // Obtener aplicantes 
+    public Map<String,Object> obtenerDetalleAplicanteOferta(int idOfertaP){
+        Object[] objOferta = ofertaRepository.obtenerDetalleOfertaAplicante(idOfertaP);
+        Object[] data = (Object[]) objOferta[0];
+
+        List<Object[]> objSolicitantes = ofertaRepository.obtenerDetalleAplicanteOferta(idOfertaP);
+
+        List<Map<String,Object>> solicitante = objSolicitantes.stream()
+            .map(obj -> {
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("idSolicitante", obj[0]);
+                map.put("nombreCompleto", obj[1]);
+                map.put("fechaSolicitud", obj[2]);
+                map.put("idEstadoSolicitud", obj[3]);
+                return map;
+            }).collect(Collectors.toList());
+
+
+        //Objeto completo
+        Map<String,Object> solicitanteOferta = new LinkedHashMap<>();
+        solicitanteOferta.put("idOferta", data[0]);
+        solicitanteOferta.put("titulo", data[1]);
+        solicitanteOferta.put("fechaPublicacion", data[2]);
+        solicitanteOferta.put("aplicantes", solicitante);
+
+        return solicitanteOferta;
+    }
 }

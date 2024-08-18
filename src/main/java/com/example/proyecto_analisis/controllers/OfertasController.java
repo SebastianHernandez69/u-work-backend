@@ -141,5 +141,16 @@ public class OfertasController {
         }
     }
 
+    //Obtener aplicantes oferta
+    @GetMapping("/aplicantes/{idOfertaP}")
+    public ResponseEntity<Object> obtenerDetalleAplicanteOferta(@PathVariable int idOfertaP){
+        try {
+            Map<String,Object> aplicantes = ofertaService.obtenerDetalleAplicanteOferta(idOfertaP);
+
+            return ResponseEntity.ok(aplicantes);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener aplicantes: "+e.getMessage());
+        }
+    }
 
 }
