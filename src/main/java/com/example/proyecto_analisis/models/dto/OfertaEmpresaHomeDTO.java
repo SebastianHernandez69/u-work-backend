@@ -15,6 +15,8 @@ public class OfertaEmpresaHomeDTO {
     
     private String nombreEmpresa;
 
+    private String logoEmpresa;
+
     private String cantOfertasAct;
 
     private String promSolicitanteOfer;

@@ -104,6 +104,7 @@ public class OfertaService {
                 map.put("nombreEmpresa", obj[0]);
                 map.put("cantidadOfertasActivas", obj[1]);
                 map.put("promedioSolicitantesOfertas", obj[2]);
+                map.put("fotoEmpresa", obj[3]);
                 return map;
             }).collect(Collectors.toList());
 
@@ -124,6 +125,7 @@ public class OfertaService {
         List<Object[]> notificaciones = ofertaRepository.obtenerNotificionesEmpresa(idEmpresaP);
         //Construccion DTO
         homeEmpresaDTO.setNombreEmpresa((String) est.get("nombreEmpresa"));
+        homeEmpresaDTO.setLogoEmpresa((String) est.get("fotoEmpresa"));
         homeEmpresaDTO.setCantOfertasAct((String) est.get("cantidadOfertasActivas"));
         homeEmpresaDTO.setPromSolicitanteOfer((String) est.get("promedioSolicitantesOfertas"));
         homeEmpresaDTO.setPorcentajeHombresAplicante(promHombreFormateado);
