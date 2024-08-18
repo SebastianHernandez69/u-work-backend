@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.Oferta;
@@ -154,6 +155,17 @@ public class OfertaService {
     public void ingresarIdiomaOferta(int idNivelIdiomaP, int idOfertaP, int idIdiomaP){
         ofertaRepository.ingresarIdiomaOferta(idNivelIdiomaP, idOfertaP, idIdiomaP);
     }
+
+    // Ingresar requisitos-academicos
+    public void ingresarReqAcadeOferta(int idOfertaP, int idFormacionProf){
+        ofertaRepository.ingresarReqAcadeOferta(idOfertaP, idFormacionProf);
+    }
+
+    // Ingresar requisitos laborales
+    public void ingresarReqLaboOferta(int idPuestoP, int idOfertaP){
+        ofertaRepository.ingresarReqLaboOferta(idPuestoP, idOfertaP);
+    }
+
     public OfertaDTO obtenerDetalleOfertaEmpresa(int idOferta){
         try {
             OfertaDTO oferta = new OfertaDTO();

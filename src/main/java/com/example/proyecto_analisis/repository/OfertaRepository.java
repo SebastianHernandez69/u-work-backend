@@ -157,6 +157,28 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                                     @Param("idOfertaP") int idOfertaP,
                                     @Param("idIdiomaP") int idIdiomaP
     );
+
+    // Agg requisitos-academicos
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO requisitos_academicos(ID_OFERTA, ID_FORMACION_PROFESIONAL) \r\n" + //
+                    "VALUES (:idOfertaP,:idFormacionProf)",nativeQuery = true)
+    public void ingresarReqAcadeOferta(
+        @Param("idOfertaP") int idOfertaP,
+        @Param("idFormacionProf") int idFormacionProf
+    );
+
+    // Agg requisitos-laborales
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO requisitos_laborales(ID_PUESTO, ID_OFERTA) \r\n" + //
+                    "VALUES (:idPuestoP,:idOfertaP)",nativeQuery = true)
+    public void ingresarReqLaboOferta(
+        @Param("idPuestoP") int idPuestoP,
+        @Param("idOfertaP") int idOfertaP
+    );
+    
+
     @Query(value = "SELECT A.TITULO, " +
     "DATE_FORMAT(A.FECHA_PUBLICACION, '%M %d, %Y') AS fecha_publicacion, " +
     "DATE_FORMAT(A.FECHA_EXPIRACION, '%M %d, %Y') AS fecha_expiracion, " +

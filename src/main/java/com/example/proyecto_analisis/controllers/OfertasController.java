@@ -73,6 +73,18 @@ public class OfertasController {
                 ofertaService.ingresarIdiomaOferta(idNivelIdioma, idOferta, idIdioma);
             }
 
+            // Agg requisitos academicos
+            List<Integer> reqAca = nvaOfertaDTO.getRequisitosAcademicos();
+            for (Integer idReqAca : reqAca) {
+                ofertaService.ingresarReqAcadeOferta(idOferta, idReqAca);
+            }
+
+            // Agg experiencia laboral
+            List<Integer> reqLab = nvaOfertaDTO.getExperienciaLaboral();
+            for (Integer idReqLab : reqLab) {
+                ofertaService.ingresarReqLaboOferta(idReqLab,idOferta);
+            }
+
             return ResponseEntity.ok("Oferta ingresada");
             
         } catch (Exception e) {
