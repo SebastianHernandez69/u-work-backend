@@ -191,8 +191,7 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     "F.TIPO_EMPLEO, " +
     "G.CONTRATO, " +
     "H.MODALIDAD, " +
-    "I.NIVEL_ACADEMICO, " +
-    "COUNT(*) AS CANTIDAD_APLICANTES " +
+    "I.NIVEL_ACADEMICO " +
     "FROM ofertas A " +
     "INNER JOIN empresa B ON (A.ID_EMPRESA = B.ID_EMPRESA) " +
     "INNER JOIN lugares C ON (A.ID_LUGAR = C.ID_LUGAR) " +
@@ -202,10 +201,13 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     "INNER JOIN contratos G ON (A.ID_CONTRATO = G.ID_CONTRATO) " +
     "INNER JOIN modalidad H ON (A.ID_MODALIDAD = H.ID_MODALIDAD) " +
     "INNER JOIN nivel_academico I ON (A.ID_NIVEL_ACADEMICO = I.ID_NIVEL_ACADEMICO) " +
-    "INNER JOIN solicitudes J ON (A.ID_OFERTA = J.ID_OFERTA) " +
-    "WHERE A.ID_OFERTA = :idOferta", 
+    "WHERE A.ID_OFERTA = :idOferta",
     nativeQuery = true)
     public Map<String, Object> obtenerDetalleOfertaEmpresa(@Param("idOferta") int idOferta);
+
+
+    @Query(value = "select COUNT(*) AS CANTIDAD_APLICANTES from solicitudes where ID_OFERTA=:idOferta", nativeQuery = true)
+    public int obtenerCantidadAplicantesOferta(@Param("idOferta") int idOferta);
 
 
     @Query(value = "SELECT b.URL_FOTO_PERFIL "+

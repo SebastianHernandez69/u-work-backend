@@ -170,6 +170,7 @@ public class OfertaService {
             OfertaDTO oferta = new OfertaDTO();
 
             Map<String, Object> detalleOferta = ofertaRepository.obtenerDetalleOfertaEmpresa(idOferta);
+            int cantidadAplicantes = ofertaRepository.obtenerCantidadAplicantesOferta(idOferta);
 
             oferta.setNombreOferta(detalleOferta.get("titulo").toString());
             oferta.setNombreEmpresa(detalleOferta.get("nombre_empresa").toString());
@@ -183,8 +184,7 @@ public class OfertaService {
             oferta.setTipoContratacion(detalleOferta.get("contrato").toString());
             oferta.setModalidad(detalleOferta.get("modalidad").toString());
             oferta.setNivelAcademico(detalleOferta.get("nivel_academico").toString());
-            Long cantidadAplicantes = (Long) detalleOferta.get("cantidad_aplicantes");
-            oferta.setCantidadAplicantes(cantidadAplicantes.intValue());
+            oferta.setCantidadAplicantes(cantidadAplicantes);
 
             List<Object[]> puestosOferta = ofertaRepository.obtenerPuestosOferta(idOferta); //consulta con los puestos
             List<String> puestosStr = new ArrayList<>(); //Lista de Strings con los puestos
