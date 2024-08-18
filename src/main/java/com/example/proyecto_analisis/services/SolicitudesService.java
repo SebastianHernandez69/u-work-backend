@@ -1,6 +1,7 @@
 package com.example.proyecto_analisis.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.dto.SolicitudDTO;
@@ -24,6 +25,16 @@ public class SolicitudesService {
                         solicitud.getIdEstadoSolicitud(),
                         solicitud.getEmisorSolicitud(),
                         solicitud.getDescripcion());
+    }
+
+    // cambiar estado solicitud
+    public void aceptarRechazarSolicitudSolicitante(int idEstadoSolicitudP, int idSolicitudP, int idSolicitanteP){
+
+            solicitudesRepository.actualizarEstadoSolicitud(idSolicitudP, idEstadoSolicitudP);
+            int idOferta = solicitudesRepository.obtenerIdOfertaSolicitud(idSolicitudP, idSolicitanteP);
+
+            solicitudesRepository.enviarNotificacionEmpresa(idSolicitanteP,idOferta,idEstadoSolicitudP,idSolicitudP);
+    
     }
 
 }

@@ -30,4 +30,13 @@ public interface SolicitudesRepository extends JpaRepository<Solicitante, Intege
     @Param(value = "emisorSolicitud") int emisorSolicitud,
     @Param(value = "descripcion") String descripcion);
 
+    // Enviar notificacion de aceptado/rechazado
+    @Modifying
+    @Transactional
+    @Query(value = "CALL enviarNotificacionEmpresa(:idSolicitanteP,:idOfertaP,:idEstadoSolicitudP,:idSolicitudP)", nativeQuery = true)
+    public void enviarNotificacionEmpresa(@Param("idSolicitanteP") int idSolicitanteP,@Param("idOfertaP") int idOfertaP,@Param("idEstadoSolicitudP") int idEstadoSolicitudP,@Param("idSolicitudP") int idSolicitudP);
+
+    //obtener id oferta
+    @Query(value = "SELECT id_oferta from solicitudes where id_solicitud=:idSolicitudP AND id_solicitante = :idSolicitanteP", nativeQuery = true)
+    public int obtenerIdOfertaSolicitud(@Param("idSolicitudP")int idSolicitudP, @Param("idSolicitanteP") int idSolicitanteP);
 }
