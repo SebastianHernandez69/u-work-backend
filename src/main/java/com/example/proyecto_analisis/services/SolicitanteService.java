@@ -281,5 +281,9 @@ public class SolicitanteService {
             return objVista;
 
         }
+        //Aplicar a una oferta
+        public void aplicarAOferta(int idSolicitante, int idOferta){
+            solicitanteRepositorio.insertarSolicitud(idSolicitante, idOferta);;
+        }
 
 }

@@ -22,7 +22,7 @@ import com.example.proyecto_analisis.services.PreferenciasService;
 import com.example.proyecto_analisis.services.SolicitanteService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/solicitante")
 public class SolicitanteController {
     
     @Autowired
@@ -31,7 +31,7 @@ public class SolicitanteController {
     @Autowired
     private PreferenciasService preferenciasImpl;
 
-    @PostMapping("/solicitante/ingresar")
+    @PostMapping("/ingresar")
     public ResponseEntity<String> ingresarSolicitante(@RequestBody Solicitante solicitante){
         
         try {
@@ -42,7 +42,7 @@ public class SolicitanteController {
         }
     }
 
-    @GetMapping("/solicitante/preferencias/{idPersona}")
+    @GetMapping("/preferencias/{idPersona}")
     public ResponseEntity<PreferenciasUsuarioDTO> obtenerPreferenciasUsuarios(@PathVariable int idPersona){
 
         PreferenciasUsuarioDTO preferenciasUsuarioDTO = preferenciasImpl.obtenerPerferencias(idPersona);
@@ -51,7 +51,7 @@ public class SolicitanteController {
         
     }
 
-    @PostMapping("/solicitante/preferencias/act/{idPersona}")
+    @PostMapping("/preferencias/act/{idPersona}")
     public ResponseEntity<String> actualizarPreferencias(@PathVariable int idPersona, @RequestBody ActPreferenciasDTO actPreferencias){
 
         try {
@@ -81,7 +81,7 @@ public class SolicitanteController {
         }
     }
 
-    @GetMapping("/solicitante/solicitudes/{idSolicitante}")
+    @GetMapping("/solicitudes/{idSolicitante}")
     public ResponseEntity<Object> obtenerAplicacionesSolicitante(@PathVariable int idSolicitante){
 
         try {
@@ -93,7 +93,7 @@ public class SolicitanteController {
         }
     }
 
-    @GetMapping("/solicitante/detalle-notificacion/{idNotificacion}")
+    @GetMapping("/detalle-notificacion/{idNotificacion}")
     public ResponseEntity<Object> obtenerDetalleNotificacionSolic(@PathVariable int idNotificacion){
         try {
             
@@ -110,7 +110,7 @@ public class SolicitanteController {
         }
     }
 
-    @PutMapping("/solicitante/act-estado-notificaicon/{idNotificacion}")
+    @PutMapping("/act-estado-notificaicon/{idNotificacion}")
     public ResponseEntity<String> cambiarEstadoNotiSolic(@PathVariable int idNotificacion){
         try {
             solicitanteImpl.cambiarEstadoNotiSolic(idNotificacion);
@@ -123,11 +123,22 @@ public class SolicitanteController {
         }
     } 
 
-    @GetMapping("/solicitante/home/{idSolicitante}")
+    @GetMapping("/home/{idSolicitante}")
     public ResponseEntity<VistaInicioSolicitante_DTO> obtenerVistaSolicitante(@PathVariable int idSolicitante){
         VistaInicioSolicitante_DTO vista = solicitanteImpl.obtenerDatosParaVistaSolicitante(idSolicitante);
 
         return ResponseEntity.ok(vista);
+    }
+
+    @PostMapping("/oferta/aplicar/{idPersona}/{idOferta}")
+    public ResponseEntity<String> aplicarAOferta(@PathVariable int idPersona, @PathVariable int idOferta){
+
+        try { 
+            solicitanteImpl.aplicarAOferta(idPersona, idOferta);
+            return ResponseEntity.ok("Se aplico a la ofeta correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al aplicar a la oferta: " + e.toString());
+        }
     }
 
 }

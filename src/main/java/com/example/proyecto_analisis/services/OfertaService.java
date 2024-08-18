@@ -376,14 +376,34 @@ public class OfertaService {
                 return map;
             }).collect(Collectors.toList());
 
+        int cantidadAplicando = ofertaRepository.obtenerCantidadAplicando(idOfertaP);
+        int cantidadSeleccionados = ofertaRepository.obtenerCantidadSeleccionados(idOfertaP);
+        //Candidatos
+        List<Object[]> objCandidatos = ofertaRepository.obtenerSugerenciasAplicantes(idOfertaP);
+        
+        List<Map<String,Object>> candidatos = objCandidatos.stream()
+            .map(obj -> {
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("id", obj[0]);
+                map.put("urlPerfil", obj[1]);
+                map.put("nombre", obj[2]);
+                map.put("lugarOrigen", obj[3]);
+                List<String> formaciones = ofertaRepository.obtenerFormacionesProf((Integer) obj[0]);
+                map.put("formaciones", 
+                   formaciones
+                );
+                return map;
+            }).collect(Collectors.toList());
 
         //Objeto completo
         Map<String,Object> solicitanteOferta = new LinkedHashMap<>();
         solicitanteOferta.put("idOferta", data[0]);
-        solicitanteOferta.put("titulo", data[1]);
+        solicitanteOferta.put("nombreOferta", data[1]);
         solicitanteOferta.put("fechaPublicacion", data[2]);
+        solicitanteOferta.put("cantidadAplicando", cantidadAplicando);
+        solicitanteOferta.put("cantidadSeleccionados", cantidadSeleccionados);
         solicitanteOferta.put("aplicantes", solicitante);
-
+        solicitanteOferta.put("candidatos", candidatos);
         return solicitanteOferta;
     }
 }
