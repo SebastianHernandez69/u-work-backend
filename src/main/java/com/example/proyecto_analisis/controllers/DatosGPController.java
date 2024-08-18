@@ -10,7 +10,19 @@ import com.example.proyecto_analisis.models.EstadoCivil;
 import com.example.proyecto_analisis.models.Genero;
 import com.example.proyecto_analisis.models.Industria;
 import com.example.proyecto_analisis.models.Lugar;
+import com.example.proyecto_analisis.models.Modalidad;
+import com.example.proyecto_analisis.models.Puesto;
 import com.example.proyecto_analisis.models.dto.DatosGP;
+import com.example.proyecto_analisis.models.dto.OptionsCrearOfertaDTO;
+import com.example.proyecto_analisis.repository.ContratoRepository;
+import com.example.proyecto_analisis.repository.FormacionProfRepository;
+import com.example.proyecto_analisis.repository.IdiomaRepository;
+import com.example.proyecto_analisis.repository.ModalidadRepository;
+import com.example.proyecto_analisis.repository.NivelAcademicoRepository;
+import com.example.proyecto_analisis.repository.NivelIdiomaRepository;
+import com.example.proyecto_analisis.repository.PuestoRepository;
+import com.example.proyecto_analisis.repository.TipoEmpleoRepository;
+import com.example.proyecto_analisis.services.IdiomaService;
 import com.example.proyecto_analisis.services.IndustriaService;
 import com.example.proyecto_analisis.services.LugarService;
 import com.example.proyecto_analisis.services.impl.EstCivilServiceImpl;
@@ -25,7 +37,31 @@ public class DatosGPController {
     
     @Autowired
     private EstCivilServiceImpl estCivilImpl;
+
+    @Autowired
+    private TipoEmpleoRepository tipoEmpleoRep;
     
+    @Autowired
+    private ContratoRepository contratosRep;
+
+    @Autowired
+    private FormacionProfRepository formacionProfRep;
+
+    @Autowired
+    private NivelAcademicoRepository nRepository;
+
+    @Autowired
+    private ModalidadRepository mRepository;
+
+    @Autowired
+    private PuestoRepository puestoRepository;
+
+    @Autowired
+    private IdiomaRepository idiomaRepository;
+
+    @Autowired
+    private NivelIdiomaRepository nivelIdiomaRep;
+
     @Autowired
     private GeneroServiceImpl generoImpl;
 
@@ -50,6 +86,25 @@ public class DatosGPController {
         res.setIndustrias(industrias);
 
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/crearOferta/info")
+    public ResponseEntity<OptionsCrearOfertaDTO> obtenerInfoCrearOferta() {
+
+        OptionsCrearOfertaDTO opciones = new OptionsCrearOfertaDTO();
+
+        opciones.setTiposEmpleos(tipoEmpleoRep.findAll());
+        opciones.setTiposContratos(contratosRep.findAll());
+        opciones.setPaises(lugarImpl.mostrarPaises(1));
+        opciones.setFormacionesAcademicas(formacionProfRep.findAll());
+        opciones.setNivelesAcademicos(nRepository.findAll());
+        opciones.setModalidades(mRepository.findAll());
+        opciones.setPuestos(puestoRepository.findAll());
+        opciones.setIdiomas(idiomaRepository.findAll());
+        opciones.setNivelIdioma(nivelIdiomaRep.findAll());
+
+
+        return ResponseEntity.ok(opciones);
     }
     
 
