@@ -249,3 +249,19 @@ BEGIN
 
 END$$
 DELIMITER ;
+
+//===============================
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `vaciarTablasIntermediasOfertas`(IN idOfertaP int)
+BEGIN
+
+	DELETE FROM ofertas_puestos WHERE ID_OFERTA = idOfertaP;
+    
+    DELETE FROM requisitos_academicos WHERE ID_OFERTA = idOfertaP;
+    
+    DELETE FROM requisitos_laborales WHERE ID_OFERTA = idOfertaP;
+    
+    DELETE FROM ofertas_idiomas WHERE ID_OFERTA = idOfertaP;
+
+END$$
+DELIMITER ;

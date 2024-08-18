@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.Oferta;
@@ -309,6 +308,53 @@ public class OfertaService {
             return nvaOfertaDTO;
         } else {
             return null;
+        }
+
+    }
+
+    //=====================================
+    //EDITAR OFERTA
+    public void editarOferta(
+        int idOfertaP,
+        NvaOfertaDTO nvaOfertaDTO
+    ){
+        ofertaRepository.vaciarTablasIntermediasOfertas(idOfertaP);
+
+        ofertaRepository.actualizarTablaOferta(
+            nvaOfertaDTO.getTitulo(),
+            nvaOfertaDTO.getPlazasDisponibles(),
+            nvaOfertaDTO.getFechaExpiracion(),
+            nvaOfertaDTO.getDescripcion(),
+            nvaOfertaDTO.getTipoEmpleo(),
+            nvaOfertaDTO.getTipoContrato(),
+            nvaOfertaDTO.getNivelAcademico(),
+            nvaOfertaDTO.getModalidad(),
+            nvaOfertaDTO.getLugar(),
+            idOfertaP
+        );
+
+        List<Integer> puestos = nvaOfertaDTO.getPuestos();
+        for (Integer idPuesto : puestos) {
+            ofertaRepository.ingresarPuestoOferta(idPuesto, idOfertaP);
+        }
+
+        List<Integer> reqAca = nvaOfertaDTO.getRequisitosAcademicos();
+        for (Integer idReqAca : reqAca) {
+            ofertaRepository.ingresarReqAcadeOferta(idOfertaP,idReqAca);
+        }
+
+        List<Integer> reqLab = nvaOfertaDTO.getExperienciaLaboral();
+        for (Integer idReqLab : reqLab) {
+            ofertaRepository.ingresarReqLaboOferta(idReqLab,idOfertaP);
+        }
+
+        List<Map<String,Integer>> idiomasInfo = nvaOfertaDTO.getIdiomas();
+
+        for (Map<String,Integer> map : idiomasInfo) {
+            Integer idIdioma = map.get("idIdioma");
+            Integer idNivelIdioma = map.get("idNivelIdioma");
+
+            ofertaRepository.ingresarIdiomaOferta(idNivelIdioma, idOfertaP, idIdioma);
         }
 
     }

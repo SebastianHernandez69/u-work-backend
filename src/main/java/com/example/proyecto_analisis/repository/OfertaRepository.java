@@ -1,5 +1,6 @@
 package com.example.proyecto_analisis.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -261,4 +262,37 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     // oferta-idiomas
     @Query(value = "SELECT ID_IDIOMA, ID_NIVEL_IDIOMA FROM ofertas_idiomas WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
     public List<Object[]> obtenerOfertaIdiomaEditable(@Param("idOfertaP") int idOfertaP);
+
+    //==========================================
+    // Actualizar editar
+    @Modifying
+    @Transactional
+    @Query(value = "CALL vaciarTablasIntermediasOfertas(:idOfertaP);",nativeQuery = true)
+    public void vaciarTablasIntermediasOfertas(@Param("idOfertaP") int idOfertaP);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE ofertas SET TITULO = :tituloP, " +
+                "PLAZAS_DISPONIBLES = :plazasDispP, " +
+                "FECHA_EXPIRACION = :fechaExpiP, " +
+                "DESCRIPCION = :descripcionP, " +
+                "ID_TIPO_EMPLEO = :idTipoEmpleoP, " +
+                "ID_CONTRATO = :idContratoP, " +
+                "ID_NIVEL_ACADEMICO = :idNivelAcaP, " +
+                "ID_MODALIDAD = :idModalidadP, " +
+                "ID_LUGAR = :idLugarP " +
+                "WHERE ID_OFERTA = :idOfertaP", nativeQuery = true)
+    void actualizarTablaOferta(
+        @Param("tituloP") String tituloP,
+        @Param("plazasDispP") int plazasDispP,
+        @Param("fechaExpiP") Date fechaExpiP,
+        @Param("descripcionP") String descripcionP,
+        @Param("idTipoEmpleoP") int idTipoEmpleoP,
+        @Param("idContratoP") int idContratoP,
+        @Param("idNivelAcaP") int idNivelAcaP,
+        @Param("idModalidadP") int idModalidadP,
+        @Param("idLugarP") int idLugarP,
+        @Param("idOfertaP") int idOfertaP
+    );
+
 }
