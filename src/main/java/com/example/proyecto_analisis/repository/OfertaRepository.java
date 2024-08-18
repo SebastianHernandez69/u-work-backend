@@ -201,4 +201,11 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "WHERE ID_EMPRESA = :idEmpresaP "+
                     "ORDER BY FECHA_PUBLICACION DESC;",nativeQuery = true)
     public List<Object[]> obtenerOfertasPorEmpresaId(@Param("idEmpresaP") int idEmpresaP);
+
+    //====================
+    //Eliminar oferta
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM ofertas WHERE ID_OFERTA = :idOfertaP",nativeQuery = true)
+    public void eliminarOfertaPorId(@Param("idOfertaP") int idOfertaP);
 }

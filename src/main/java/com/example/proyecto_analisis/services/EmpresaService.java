@@ -27,7 +27,7 @@ public class EmpresaService {
         if (empresa == null) {
             return 0;
         } else {
-            return empresa.getIdDirector();
+            return empresa.getIdEmpresa();
         }
     }
 

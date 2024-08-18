@@ -248,4 +248,8 @@ public class OfertaService {
             return ofertas;
     }
 
+    // Eliminar oferta por ifOferta
+    public void eliminarOfertaPorId(int idOferta){
+        ofertaRepository.eliminarOfertaPorId(idOferta);
+    }
 }
