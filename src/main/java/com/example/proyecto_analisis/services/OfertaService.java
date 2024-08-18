@@ -1,6 +1,7 @@
 package com.example.proyecto_analisis.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto_analisis.models.Oferta;
+import com.example.proyecto_analisis.models.dto.NvaOfertaDTO;
 import com.example.proyecto_analisis.models.dto.OfertaDTO;
 import com.example.proyecto_analisis.models.dto.OfertaEmpresaHomeDTO;
 import com.example.proyecto_analisis.repository.OfertaModelRepository;
@@ -152,6 +154,17 @@ public class OfertaService {
     public void ingresarIdiomaOferta(int idNivelIdiomaP, int idOfertaP, int idIdiomaP){
         ofertaRepository.ingresarIdiomaOferta(idNivelIdiomaP, idOfertaP, idIdiomaP);
     }
+
+    // Ingresar requisitos-academicos
+    public void ingresarReqAcadeOferta(int idOfertaP, int idFormacionProf){
+        ofertaRepository.ingresarReqAcadeOferta(idOfertaP, idFormacionProf);
+    }
+
+    // Ingresar requisitos laborales
+    public void ingresarReqLaboOferta(int idPuestoP, int idOfertaP){
+        ofertaRepository.ingresarReqLaboOferta(idPuestoP, idOfertaP);
+    }
+
     public OfertaDTO obtenerDetalleOfertaEmpresa(int idOferta){
         try {
             OfertaDTO oferta = new OfertaDTO();
@@ -251,5 +264,126 @@ public class OfertaService {
     // Eliminar oferta por ifOferta
     public void eliminarOfertaPorId(int idOferta){
         ofertaRepository.eliminarOfertaPorId(idOferta);
+    }
+
+    //=======================================
+    //TRAER OFERTA EDITABLE
+    public NvaOfertaDTO obtenerOfertaEditable(int idOferta){
+        
+        NvaOfertaDTO nvaOfertaDTO = new NvaOfertaDTO();
+
+        Object[] objOferta = ofertaRepository.obtenerOfertaEditable(idOferta);
+        if (objOferta instanceof Object[]) {
+            Object[] data = (Object[]) objOferta[0];
+
+            nvaOfertaDTO.setTitulo((String )data[0]);
+            nvaOfertaDTO.setPlazasDisponibles((Integer) data[1]);
+            nvaOfertaDTO.setFechaExpiracion((Date) data[2]);
+            nvaOfertaDTO.setDescripcion((String) data[3]);
+            nvaOfertaDTO.setTipoEmpleo((Integer) data[4]);
+            nvaOfertaDTO.setTipoContrato((Integer) data[5]);
+            nvaOfertaDTO.setNivelAcademico((Integer) data[6]);
+            nvaOfertaDTO.setModalidad((Integer) data[7]);
+            nvaOfertaDTO.setLugar((Integer) data[8]);
+
+            List<Integer> puestos = ofertaRepository.obtenerOfertaPuestoEditable(idOferta);
+            List<Integer> reqAcade = ofertaRepository.obtenerOfertaReqAcadeEditable(idOferta);
+            List<Integer> reqLabo = ofertaRepository.obtenerOfertaReqLaborEditable(idOferta);
+
+            List<Object[]> objIdiomas = ofertaRepository.obtenerOfertaIdiomaEditable(idOferta);
+
+            List<Map<String,Integer>> idiomas = objIdiomas.stream()
+                .map(obj -> {
+                    Map<String,Integer> map = new LinkedHashMap<>();
+                    map.put("idioma", (Integer) obj[0]);
+                    map.put("nivelIdioma", (Integer) obj[1]);
+                    return map;
+                }).collect(Collectors.toList());
+
+            nvaOfertaDTO.setExperienciaLaboral(reqLabo);
+            nvaOfertaDTO.setRequisitosAcademicos(reqAcade);
+            nvaOfertaDTO.setPuestos(puestos);
+            nvaOfertaDTO.setIdiomas(idiomas);
+
+            return nvaOfertaDTO;
+        } else {
+            return null;
+        }
+
+    }
+
+    //=====================================
+    //EDITAR OFERTA
+    public void editarOferta(
+        int idOfertaP,
+        NvaOfertaDTO nvaOfertaDTO
+    ){
+        ofertaRepository.vaciarTablasIntermediasOfertas(idOfertaP);
+
+        ofertaRepository.actualizarTablaOferta(
+            nvaOfertaDTO.getTitulo(),
+            nvaOfertaDTO.getPlazasDisponibles(),
+            nvaOfertaDTO.getFechaExpiracion(),
+            nvaOfertaDTO.getDescripcion(),
+            nvaOfertaDTO.getTipoEmpleo(),
+            nvaOfertaDTO.getTipoContrato(),
+            nvaOfertaDTO.getNivelAcademico(),
+            nvaOfertaDTO.getModalidad(),
+            nvaOfertaDTO.getLugar(),
+            idOfertaP
+        );
+
+        List<Integer> puestos = nvaOfertaDTO.getPuestos();
+        for (Integer idPuesto : puestos) {
+            ofertaRepository.ingresarPuestoOferta(idPuesto, idOfertaP);
+        }
+
+        List<Integer> reqAca = nvaOfertaDTO.getRequisitosAcademicos();
+        for (Integer idReqAca : reqAca) {
+            ofertaRepository.ingresarReqAcadeOferta(idOfertaP,idReqAca);
+        }
+
+        List<Integer> reqLab = nvaOfertaDTO.getExperienciaLaboral();
+        for (Integer idReqLab : reqLab) {
+            ofertaRepository.ingresarReqLaboOferta(idReqLab,idOfertaP);
+        }
+
+        List<Map<String,Integer>> idiomasInfo = nvaOfertaDTO.getIdiomas();
+
+        for (Map<String,Integer> map : idiomasInfo) {
+            Integer idIdioma = map.get("idIdioma");
+            Integer idNivelIdioma = map.get("idNivelIdioma");
+
+            ofertaRepository.ingresarIdiomaOferta(idNivelIdioma, idOfertaP, idIdioma);
+        }
+
+    }
+
+    // Obtener aplicantes 
+    public Map<String,Object> obtenerDetalleAplicanteOferta(int idOfertaP){
+        Object[] objOferta = ofertaRepository.obtenerDetalleOfertaAplicante(idOfertaP);
+        Object[] data = (Object[]) objOferta[0];
+
+        List<Object[]> objSolicitantes = ofertaRepository.obtenerDetalleAplicanteOferta(idOfertaP);
+
+        List<Map<String,Object>> solicitante = objSolicitantes.stream()
+            .map(obj -> {
+                Map<String,Object> map = new LinkedHashMap<>();
+                map.put("idSolicitante", obj[0]);
+                map.put("nombreCompleto", obj[1]);
+                map.put("fechaSolicitud", obj[2]);
+                map.put("idEstadoSolicitud", obj[3]);
+                return map;
+            }).collect(Collectors.toList());
+
+
+        //Objeto completo
+        Map<String,Object> solicitanteOferta = new LinkedHashMap<>();
+        solicitanteOferta.put("idOferta", data[0]);
+        solicitanteOferta.put("titulo", data[1]);
+        solicitanteOferta.put("fechaPublicacion", data[2]);
+        solicitanteOferta.put("aplicantes", solicitante);
+
+        return solicitanteOferta;
     }
 }

@@ -16,6 +16,7 @@ import com.example.proyecto_analisis.services.OfertaService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -73,6 +74,18 @@ public class OfertasController {
                 ofertaService.ingresarIdiomaOferta(idNivelIdioma, idOferta, idIdioma);
             }
 
+            // Agg requisitos academicos
+            List<Integer> reqAca = nvaOfertaDTO.getRequisitosAcademicos();
+            for (Integer idReqAca : reqAca) {
+                ofertaService.ingresarReqAcadeOferta(idOferta, idReqAca);
+            }
+
+            // Agg experiencia laboral
+            List<Integer> reqLab = nvaOfertaDTO.getExperienciaLaboral();
+            for (Integer idReqLab : reqLab) {
+                ofertaService.ingresarReqLaboOferta(idReqLab,idOferta);
+            }
+
             return ResponseEntity.ok("Oferta ingresada");
             
         } catch (Exception e) {
@@ -98,6 +111,45 @@ public class OfertasController {
             return ResponseEntity.ok(ofertasEmpresa);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    @GetMapping("/obtener/{idOferta}")
+    public ResponseEntity<Object> obtenerOfertaEditable(@PathVariable int idOferta){
+        try {
+            
+            NvaOfertaDTO nvaOfertaDTO = ofertaService.obtenerOfertaEditable(idOferta);
+
+        if (nvaOfertaDTO != null) {
+            return ResponseEntity.ok(nvaOfertaDTO);
+        } else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada");
+        }
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+    
+    @PutMapping("/editar/{idOfertaP}")
+    public ResponseEntity<Object> editarOferta(@PathVariable int idOfertaP, @RequestBody NvaOfertaDTO nvaOfertaDTO){
+        try {
+            ofertaService.editarOferta(idOfertaP, nvaOfertaDTO);
+            return ResponseEntity.ok("Actualizacion exitosa :)");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: "+e.getMessage());
+        }
+    }
+
+    //Obtener aplicantes oferta
+    @GetMapping("/aplicantes/{idOfertaP}")
+    public ResponseEntity<Object> obtenerDetalleAplicanteOferta(@PathVariable int idOfertaP){
+        try {
+            Map<String,Object> aplicantes = ofertaService.obtenerDetalleAplicanteOferta(idOfertaP);
+
+            return ResponseEntity.ok(aplicantes);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener aplicantes: "+e.getMessage());
         }
     }
 

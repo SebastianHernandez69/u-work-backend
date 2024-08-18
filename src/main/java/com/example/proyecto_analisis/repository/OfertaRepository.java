@@ -1,5 +1,6 @@
 package com.example.proyecto_analisis.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -90,13 +91,13 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
              "    CAST(AVG(sub.solicitantes_por_oferta) AS CHAR) AS promedio_solicitantes, " +
              "    e.URL_LOGO " +
              "FROM " +
-             "    EMPRESA e " +
+             "    empresa e " +
              "LEFT JOIN " +
-             "    OFERTAS o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 " +
+             "    ofertas o ON e.ID_EMPRESA = o.ID_EMPRESA AND o.ESTADO_OFERTA = 1 " +
              "LEFT JOIN " +
              "    (SELECT o.ID_OFERTA, COUNT(s.ID_SOLICITANTE) AS solicitantes_por_oferta " +
-             "    FROM OFERTAS o " +
-             "    LEFT JOIN SOLICITUDES s ON o.ID_OFERTA = s.ID_OFERTA " +
+             "    FROM ofertas o " +
+             "    LEFT JOIN solicitudes s ON o.ID_OFERTA = s.ID_OFERTA " +
              "    WHERE o.ESTADO_OFERTA = 1 " +
              "    AND o.ID_EMPRESA = :idEmpresaP " +
              "    GROUP BY o.ID_OFERTA " +
@@ -157,6 +158,28 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                                     @Param("idOfertaP") int idOfertaP,
                                     @Param("idIdiomaP") int idIdiomaP
     );
+
+    // Agg requisitos-academicos
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO requisitos_academicos(ID_OFERTA, ID_FORMACION_PROFESIONAL) \r\n" + //
+                    "VALUES (:idOfertaP,:idFormacionProf)",nativeQuery = true)
+    public void ingresarReqAcadeOferta(
+        @Param("idOfertaP") int idOfertaP,
+        @Param("idFormacionProf") int idFormacionProf
+    );
+
+    // Agg requisitos-laborales
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO requisitos_laborales(ID_PUESTO, ID_OFERTA) \r\n" + //
+                    "VALUES (:idPuestoP,:idOfertaP)",nativeQuery = true)
+    public void ingresarReqLaboOferta(
+        @Param("idPuestoP") int idPuestoP,
+        @Param("idOfertaP") int idOfertaP
+    );
+    
+
     @Query(value = "SELECT A.TITULO, " +
     "DATE_FORMAT(A.FECHA_PUBLICACION, '%M %d, %Y') AS fecha_publicacion, " +
     "DATE_FORMAT(A.FECHA_EXPIRACION, '%M %d, %Y') AS fecha_expiracion, " +
@@ -208,4 +231,85 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
     @Transactional
     @Query(value = "DELETE FROM ofertas WHERE ID_OFERTA = :idOfertaP",nativeQuery = true)
     public void eliminarOfertaPorId(@Param("idOfertaP") int idOfertaP);
+
+    //===============================================================
+    //*********************TRAER OFERTA PARA EDITAR*************** */
+
+    @Query(value = "SELECT TITULO,"+
+                            "PLAZAS_DISPONIBLES,"+
+                            "FECHA_EXPIRACION, "+
+                            "DESCRIPCION,"+
+                            "ID_TIPO_EMPLEO, "+
+                            "ID_CONTRATO,"+
+                            "ID_NIVEL_ACADEMICO, "+
+                            "ID_MODALIDAD, "+
+                            "ID_LUGAR "+
+                    "FROM ofertas WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public Object[] obtenerOfertaEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta puesto
+    @Query(value = "SELECT ID_PUESTO FROM ofertas_puestos WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Integer> obtenerOfertaPuestoEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta requisitos-academicos
+    @Query(value = "SELECT ID_FORMACION_PROFESIONAL FROM requisitos_academicos WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Integer> obtenerOfertaReqAcadeEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta experiencia-laboral
+    @Query(value = "SELECT ID_REQUISITOS_LABORALES FROM requisitos_laborales WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Integer> obtenerOfertaReqLaborEditable(@Param("idOfertaP") int idOfertaP);
+
+    // oferta-idiomas
+    @Query(value = "SELECT ID_IDIOMA, ID_NIVEL_IDIOMA FROM ofertas_idiomas WHERE ID_OFERTA = :idOfertaP;",nativeQuery = true)
+    public List<Object[]> obtenerOfertaIdiomaEditable(@Param("idOfertaP") int idOfertaP);
+
+    //==========================================
+    // Actualizar editar
+    @Modifying
+    @Transactional
+    @Query(value = "CALL vaciarTablasIntermediasOfertas(:idOfertaP);",nativeQuery = true)
+    public void vaciarTablasIntermediasOfertas(@Param("idOfertaP") int idOfertaP);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE ofertas SET TITULO = :tituloP, " +
+                "PLAZAS_DISPONIBLES = :plazasDispP, " +
+                "FECHA_EXPIRACION = :fechaExpiP, " +
+                "DESCRIPCION = :descripcionP, " +
+                "ID_TIPO_EMPLEO = :idTipoEmpleoP, " +
+                "ID_CONTRATO = :idContratoP, " +
+                "ID_NIVEL_ACADEMICO = :idNivelAcaP, " +
+                "ID_MODALIDAD = :idModalidadP, " +
+                "ID_LUGAR = :idLugarP " +
+                "WHERE ID_OFERTA = :idOfertaP", nativeQuery = true)
+    public void actualizarTablaOferta(
+        @Param("tituloP") String tituloP,
+        @Param("plazasDispP") int plazasDispP,
+        @Param("fechaExpiP") Date fechaExpiP,
+        @Param("descripcionP") String descripcionP,
+        @Param("idTipoEmpleoP") int idTipoEmpleoP,
+        @Param("idContratoP") int idContratoP,
+        @Param("idNivelAcaP") int idNivelAcaP,
+        @Param("idModalidadP") int idModalidadP,
+        @Param("idLugarP") int idLugarP,
+        @Param("idOfertaP") int idOfertaP
+    );
+
+    //Obtener aplicantes oferta
+    @Query(value =  "SELECT ID_OFERTA,"+
+                    "        TITULO,"+
+                    "        DATE_FORMAT(FECHA_PUBLICACION, '%d %b, %Y') as FECHA_PUBLICACION "+
+                    "FROM ofertas "+
+                    "WHERE ID_OFERTA = :idOfertaP", nativeQuery = true)
+    public Object[] obtenerDetalleOfertaAplicante(@Param("idOfertaP") int idOfertaP);
+
+    @Query(value = "SELECT s.ID_PERSONA,"+
+                    "        CONCAT(p.primer_nombre,' ',p.segundo_nombre,' ',p.primer_apellido,' ',p.segundo_apellido) as nombreCompleto,"+
+                    "        DATE_FORMAT(soli.fecha_solicitud, '%d %b, %Y') as fechaSolicitud,"+
+                    "        soli.id_estado_solicitud "+
+                    "FROM solicitudes soli "+
+                    "INNER JOIN solicitantes s on soli.ID_SOLICITANTE = s.ID_PERSONA "+
+                    "INNER JOIN personas p on s.ID_PERSONA = p.ID_PERSONA "+
+                    "WHERE ID_OFERTA = :idOfertaP AND soli.EMISOR_SOLICITUD = 0", nativeQuery = true)
+    public List<Object[]> obtenerDetalleAplicanteOferta(@Param("idOfertaP") int idOfertaP);
 }
