@@ -3,6 +3,7 @@ package com.example.proyecto_analisis.controllers;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -100,6 +101,20 @@ public class EmpresaController {
             return ResponseEntity.badRequest().body("Error al obtener notificacion: "+ e.getMessage());
         }
     }
+
+
+    @PutMapping("/act-estado-notificaicon/{idNotificacion}")
+    public ResponseEntity<String> cambiarEstadoNotiEmpresa(@PathVariable int idNotificacion){
+        try {
+            notificacionEmpresaImpl.cambiarEstadoNotiEmpresa(idNotificacion);
+
+            return ResponseEntity.ok("Se ha cambiado el estado correctamente");
+        } catch (Exception e) {
+            
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar: " + e.getMessage());
+
+        }
+    } 
 
     //Eliminar oferta de empresa
     @PutMapping("/oferta/eliminar/{idOferta}")

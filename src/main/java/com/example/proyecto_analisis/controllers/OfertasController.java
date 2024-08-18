@@ -1,5 +1,6 @@
 package com.example.proyecto_analisis.controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,8 @@ public class OfertasController {
             nvaOferta.setDescripcion(nvaOfertaDTO.getDescripcion());
             nvaOferta.setFechaExpiracion(nvaOfertaDTO.getFechaExpiracion());
             nvaOferta.setPlazasDisponibles(nvaOfertaDTO.getPlazasDisponibles());
+            nvaOferta.setFechaPublicacion(new Date(System.currentTimeMillis()));
+            nvaOferta.setEstadoOferta(true);
 
             int idOferta = ofertaService.ingresarNvaOferta(nvaOferta);
             

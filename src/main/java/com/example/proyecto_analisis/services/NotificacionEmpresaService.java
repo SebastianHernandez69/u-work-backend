@@ -35,10 +35,10 @@ public class NotificacionEmpresaService {
         }else{
             return Collections.emptyMap();
         }
-        
-
-
-        
     }
 
+     // Cambiar estado de notificacion solicitante
+     public void cambiarEstadoNotiEmpresa(int idNotificacionEmpresa){
+        notificacionEmpresaRepositorio.cambiarEstadoNotiEmpresa(idNotificacionEmpresa);
+    }
 }
