@@ -24,4 +24,6 @@ public class DatosPA_DTO {
     private String fechaNacimiento;
 
     private String descripcion;
+
+    private String urlPerfil;
 }

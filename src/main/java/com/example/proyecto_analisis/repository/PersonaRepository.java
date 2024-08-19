@@ -28,7 +28,8 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer>{
                     "    CONCAT(p.telefono,'') as telefono,"+
                     "    so.correo as correo,"+
                     "    DATE_FORMAT(so.FECHA_NACIMIENTO, '%d %b, %Y') AS fechaNacimiento,"+
-                    "    so.descripcion as descripcion "+
+                    "    so.descripcion as descripcion, "+
+                    "    so.URL_FOTO_PERFIL as urlFoto " +
                     "FROM personas p "+
                     "INNER JOIN solicitantes so on p.ID_PERSONA = so.ID_PERSONA "+
                     "INNER JOIN lugares l on so.ID_LUGAR_RESIDENCIA = l.ID_LUGAR "+
