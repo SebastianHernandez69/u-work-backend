@@ -63,6 +63,7 @@ public class PersonaService {
             datosPA_DTO.setCorreo(datos[4] != null ? datos[4].toString() : null);
             datosPA_DTO.setFechaNacimiento(datos[5] != null ? datos[5].toString() : null);
             datosPA_DTO.setDescripcion(datos[6] != null ? datos[6].toString() : null);
+            datosPA_DTO.setUrlPerfil(datos[7] != null ? datos[6].toString() : null);
             
             return datosPA_DTO;
         }
@@ -201,6 +202,15 @@ public class PersonaService {
         }else {
             return null;
         }
+
+    }
+
+    // Autentica admin
+    public int autenticarAdmin(String correoP, String contrasenaP){
+
+        int idAdmin = personaRepositorio.autenticarAdmin(correoP, contrasenaP);
+
+        return idAdmin;
 
     }
 }
