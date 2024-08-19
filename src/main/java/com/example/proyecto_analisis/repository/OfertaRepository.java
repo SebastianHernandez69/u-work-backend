@@ -366,4 +366,15 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "LIMIT 20 OFFSET 0;" , nativeQuery = true)
     public List<Object[]> obtenerSugerenciasAplicantes(@Param("idOfertaP") int idOfertaP);
 
+    @Query(value = "select 	a.ID_LUGAR as municipio,"+
+                    "b.ID_LUGAR_PADRE as departamento,"+
+                    "c.ID_LUGAR_PADRE as pais "+
+                    "from ofertas a "+
+                    "inner join lugares b " +
+                    "on (a.ID_LUGAR = b.ID_LUGAR) "+
+                    "inner join lugares c "+
+                    "on (b.ID_lugar_padre = c.ID_LUGAR) "+
+                    "where a.ID_OFERTA=:idOfertaP", nativeQuery = true)
+    public Map<String,Object>obtenerLugarCompletoOferta(@Param("idOfertaP") int idOfertaP);
+
 }

@@ -35,6 +35,12 @@ public class NvaOfertaDTO {
     private List<Integer> puestos;
     
     private int lugar;
+
+    private int pais;
+
+    private int departamento;
+
+    private int municipio;
     
     private List<Integer> requisitosAcademicos;
 
