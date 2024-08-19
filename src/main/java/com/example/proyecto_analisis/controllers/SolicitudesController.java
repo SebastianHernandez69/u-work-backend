@@ -61,4 +61,17 @@ public class SolicitudesController {
         }
     }
 
+    @PutMapping("/cambiar-estado/empresa")
+    public ResponseEntity<String> cambiarEstadoSolicitudEmpresa(@RequestBody Map<String,Integer> datosEstado){
+        try {
+            int idSolicitud = datosEstado.get("idSolicitud");
+            int idEstado = datosEstado.get("idEstado");
+
+            solicitudesService.cambiarEstadoSolicitudEmpresa(idEstado, idSolicitud);
+
+            return ResponseEntity.ok("Cambio de estado de solicitud correcto");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al cambiar estado"+e.getMessage());
+        }
+    }
 }
