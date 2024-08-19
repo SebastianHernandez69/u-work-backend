@@ -205,7 +205,7 @@ public class MantenimientoAdminController {
     @Autowired
     private LugarService lugarService;
 
-    @GetMapping("/lugar/mostrar-all")
+    @GetMapping("/lugar/mostrar")
     public List<Lugar> mostrarLugares() {
         return (List<Lugar>) lugarService.mostrarLugaresTodos();
     }
