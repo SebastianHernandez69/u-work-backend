@@ -273,6 +273,8 @@ public class OfertaService {
         NvaOfertaDTO nvaOfertaDTO = new NvaOfertaDTO();
 
         Object[] objOferta = ofertaRepository.obtenerOfertaEditable(idOferta);
+        Map<String,Object> mapLugares = ofertaRepository.obtenerLugarCompletoOferta(idOferta);
+
         if (objOferta instanceof Object[]) {
             Object[] data = (Object[]) objOferta[0];
 
@@ -285,6 +287,9 @@ public class OfertaService {
             nvaOfertaDTO.setNivelAcademico((Integer) data[6]);
             nvaOfertaDTO.setModalidad((Integer) data[7]);
             nvaOfertaDTO.setLugar((Integer) data[8]);
+            nvaOfertaDTO.setPais((Integer)mapLugares.get("pais"));
+            nvaOfertaDTO.setDepartamento((Integer)mapLugares.get("departamento"));
+            nvaOfertaDTO.setMunicipio((Integer)mapLugares.get("municipio"));
 
             List<Integer> puestos = ofertaRepository.obtenerOfertaPuestoEditable(idOferta);
             List<Integer> reqAcade = ofertaRepository.obtenerOfertaReqAcadeEditable(idOferta);
