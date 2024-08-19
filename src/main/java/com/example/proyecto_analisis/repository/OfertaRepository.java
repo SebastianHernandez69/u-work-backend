@@ -377,4 +377,7 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "where a.ID_OFERTA=:idOfertaP", nativeQuery = true)
     public Map<String,Object>obtenerLugarCompletoOferta(@Param("idOfertaP") int idOfertaP);
 
+    @Query(value = "select plazas_disponibles from ofertas where id_oferta=:idOfertaP", nativeQuery = true)
+public int obtenerCantidadPlazas(@Param("idOfertaP") int idOfertaP);
+
 }
