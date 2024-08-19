@@ -370,9 +370,11 @@ public class OfertaService {
             .map(obj -> {
                 Map<String,Object> map = new LinkedHashMap<>();
                 map.put("idSolicitante", obj[0]);
-                map.put("nombreCompleto", obj[1]);
-                map.put("fechaSolicitud", obj[2]);
-                map.put("idEstadoSolicitud", obj[3]);
+                map.put("idSolicitud", obj[1]);
+                map.put("urlPerfil", obj[2]);
+                map.put("nombreCompleto", obj[3]);
+                map.put("fechaSolicitud", obj[4]);
+                map.put("idEstadoSolicitud", obj[5]);
                 return map;
             }).collect(Collectors.toList());
 

@@ -335,7 +335,7 @@ public interface OfertaRepository extends JpaRepository<Solicitante, Integer> {
                     "WHERE s.ID_PERSONA = :idPersonaP;",nativeQuery = true)
     public List<String> obtenerFormacionesProf (@Param("idPersonaP") int idPersonaP);
 
-    @Query(value = "SELECT s.ID_PERSONA,"+
+    @Query(value = "SELECT s.ID_PERSONA, soli.ID_SOLICITUD, s.URL_FOTO_PERFIL,  "+
                     "        CONCAT(p.primer_nombre,' ',p.segundo_nombre,' ',p.primer_apellido,' ',p.segundo_apellido) as nombreCompleto,"+
                     "        DATE_FORMAT(soli.fecha_solicitud, '%d %b, %Y') as fechaSolicitud,"+
                     "        soli.id_estado_solicitud "+

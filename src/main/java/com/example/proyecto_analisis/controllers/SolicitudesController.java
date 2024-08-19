@@ -39,7 +39,7 @@ public class SolicitudesController {
     public ResponseEntity<String> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
         try {
             solicitudesService.crearSolicitud(solicitud);
-            return ResponseEntity.ok("Se ha cambiado el estado de la solicitud correctamente");
+            return ResponseEntity.ok("La solicitud fue realizada con exito");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar: " + e.getMessage());
         }
