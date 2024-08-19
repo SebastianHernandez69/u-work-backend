@@ -17,6 +17,7 @@ public interface SolicitanteRepository extends JpaRepository<Solicitante, Intege
     @Query("SELECT s FROM Solicitante s WHERE correo = ?1 AND contrasena = ?2")
     public Solicitante autenticarSolicitante(String correo, String contrasena);
 
+
     @Modifying
     @Transactional
     @Query(value = "CALL insertarHistorialAcademico(:idPersonaP, :idNivelAcademicoP, :idFormacionAcP, :tituloP, :fechaEgresoP, :INSTITUCIONP)", nativeQuery = true)

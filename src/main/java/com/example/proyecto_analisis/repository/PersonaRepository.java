@@ -105,4 +105,8 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer>{
                     "WHERE f.ID_SOLICITANTE = :idPersona;",
             nativeQuery = true)
     public List<Object[]> obtenerFamiliaresPA(@Param("idPersona") int idPersona);
+
+    //login administradores
+    @Query(value = "SELECT ID_PERSONA FROM administradores WHERE CORREO = :correoP and CONTRASENA = :contrasenaP;", nativeQuery = true)
+    public int autenticarAdmin(@Param("correoP") String correoP, @Param("contrasenaP") String contrasenaP);
 }

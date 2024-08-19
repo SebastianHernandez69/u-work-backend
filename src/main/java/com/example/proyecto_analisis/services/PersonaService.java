@@ -203,4 +203,13 @@ public class PersonaService {
         }
 
     }
+
+    // Autentica admin
+    public int autenticarAdmin(String correoP, String contrasenaP){
+
+        int idAdmin = personaRepositorio.autenticarAdmin(correoP, contrasenaP);
+
+        return idAdmin;
+
+    }
 }

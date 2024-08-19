@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.proyecto_analisis.models.dto.LoginDTO;
 import com.example.proyecto_analisis.services.EmpresaService;
+import com.example.proyecto_analisis.services.PersonaService;
 import com.example.proyecto_analisis.services.SolicitanteService;
 
 @RestController
@@ -22,6 +23,9 @@ public class LoginDTOController {
     @Autowired
     private EmpresaService empresaImpl;
 
+    @Autowired 
+    private PersonaService personaImpl;
+
     @PostMapping("/login/solicitante")
     public ResponseEntity<Integer> autenticarSolicitante(@RequestBody LoginDTO loginDTO){
         int idPersonaSoli = solicitanteImpl.autenticarSolicitante(loginDTO.getCorreo(), loginDTO.getContrasena());
@@ -32,6 +36,17 @@ public class LoginDTOController {
     public ResponseEntity<Integer> autenticarDirectorEmpresa(@RequestBody LoginDTO loginDTO){
         int idDirectorEmpresa = empresaImpl.autenticarDirectorEmpresa(loginDTO.getCorreo(), loginDTO.getContrasena());
         return ResponseEntity.ok(idDirectorEmpresa);
+    }
+
+    @PostMapping("/login/admin")
+    public ResponseEntity<Integer> autenticarAdministrador(@RequestBody LoginDTO loginDTO){
+        try {
+            int idAdmin = personaImpl.autenticarAdmin(loginDTO.getCorreo(), loginDTO.getContrasena());
+            return ResponseEntity.ok(idAdmin);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(0);
+        }
+        
     }
 
 }
