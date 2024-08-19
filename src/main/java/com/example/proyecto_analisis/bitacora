@@ -150,12 +150,13 @@ BEGIN
         em.url_logo
     FROM estado_solicitud es
     INNER JOIN solicitudes s on es.ID_ESTADO_SOLICITUD = s.ID_ESTADO_SOLICITUD
-    INNER JOIN ofertas of on s.ID_OFERTA = o.ID_OFERTA
+    INNER JOIN ofertas o on s.ID_OFERTA = o.ID_OFERTA -- Corregido: `of` a `o`
     INNER JOIN empresa em on o.ID_EMPRESA = em.ID_EMPRESA
     WHERE s.ID_SOLICITANTE = idSolicitanteP
     ORDER BY s.FECHA_SOLICITUD ASC;
 END$$
 DELIMITER ;
+
 
 
 //======
@@ -177,6 +178,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
 
 
 //============================
@@ -225,7 +227,8 @@ BEGIN
             ID_SOLICITUD_P
         );
     END IF;
-    -- si fue rechazada
+    
+    -- Si fue rechazada
 	IF ID_ESTADO_SOLICITUD_P = 4 THEN 
         INSERT INTO notificaciones_empresas (
             TITULO, 
@@ -248,21 +251,20 @@ BEGIN
 END$$
 DELIMITER ;
 
+
 //===============================
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `vaciarTablasIntermediasOfertas`(IN idOfertaP int)
 BEGIN
 
 	DELETE FROM ofertas_puestos WHERE ID_OFERTA = idOfertaP;
-    
     DELETE FROM requisitos_academicos WHERE ID_OFERTA = idOfertaP;
-    
     DELETE FROM requisitos_laborales WHERE ID_OFERTA = idOfertaP;
-    
     DELETE FROM ofertas_idiomas WHERE ID_OFERTA = idOfertaP;
 
 END$$
 DELIMITER ;
+
 
 
 //===== CREAR UNA APLICACION A OFERTA
@@ -327,10 +329,10 @@ BEGIN
 		SET v_DESCRIPCION_EMPRESA = Concat('Hola ', v_nombre_empresa,', el usuario ', V_NOMBRE_SOLICITANTE, ' ha aplicado correctamente a la oferta ', V_NOMBRE_OFERTA, ', mensaje:  ', p_descripcion);
         
 		SET V_DESCRIPCION_SOLICITANTE = Concat('Felicidades! ',V_NOMBRE_SOLICITANTE,' has aplicado correctamente a la oferta ',V_NOMBRE_OFERTA,' de la empresa ',v_nombre_empresa, ', mensaje:  ', p_descripcion);
-	else
+	ELSE
 		SET v_DESCRIPCION_EMPRESA = Concat('Hola ', v_nombre_empresa, ', se ha enviado una solicitud de aplicacion de la oferta ', V_NOMBRE_OFERTA, ' al solicitante ', V_NOMBRE_SOLICITANTE, ', mensaje:  ', p_descripcion);
 		
-		SET V_DESCRIPCION_SOLICITANTE = Concat('Buen dia! ', V_NOMBRE_SOLICITANTE,' Has recibido una solicitud para aplicar a la oferta ',V_NOMBRE_OFERTA,' de la empresa ',v_nombre_empresa, '. Tu eliges si aplicar.', ' mensaje:  ', p_descripcion);
+		SET V_DESCRIPCION_SOLICITANTE = Concat('Buen dia! ', V_NOMBRE_SOLICITANTE,' Has recibido una solicitud para aplicar a la oferta ',V_NOMBRE_OFERTA,' de la empresa ',v_nombre_empresa, '. Tu eliges si aplicar.', ' mensaje:  ', p_descripcion);
 	END IF;
 	
 	
@@ -352,7 +354,9 @@ BEGIN
 	`ESTADO_VISUALIZACION`,
 	`ID_SOLICITUD`)
 	VALUES
-	('Nueva aplicacion a una oferta',V_DESCRIPCION_SOLICITANTE, sysdate(),p_idSolicitante, 0, v_id_solicitud);
+	('Nueva aplicacion a oferta',V_DESCRIPCION_SOLICITANTE, sysdate(),p_idSolicitante, 0, v_id_solicitud);
+	
 	COMMIT;
+	SELECT 'Aplicacion creada correctamente' AS mensaje;
 END$$
 DELIMITER ;
